@@ -1,3 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Квиз ВОВ | Память Тулы</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* === БАЗОВЫЕ СТИЛИ === */
+        .quiz-wrapper { position: relative; max-width: 900px; margin: 60px auto; padding: 40px 20px; z-index: 1; font-family: 'Montserrat', sans-serif; color: #e0e0e0; }
+        .quiz-card { background-color: #1e1e1e; border-radius: 12px; padding: 40px; border: 1px solid #333; border-top: 4px solid #d4af37; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+        
+        /* Выбор режима */
+        .mode-selection { text-align: center; }
+        .mode-selection h2 { font-family: 'Playfair Display', serif; color: #d4af37; font-size: 2.5rem; margin-bottom: 15px; }
+        .mode-selection p { color: #aaa; margin-bottom: 40px; font-size: 1.1rem; }
+        .mode-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .mode-btn { background: #252525; border: 2px solid #444; padding: 30px; border-radius: 10px; cursor: pointer; transition: all 0.3s; flex: 1; min-width: 250px; max-width: 300px; display: flex; flex-direction: column; align-items: center; }
+        .mode-btn:hover { border-color: #d4af37; background: #2a2a2a; transform: translateY(-5px); }
+        .mode-btn .icon { font-size: 3rem; margin-bottom: 15px; }
+        .mode-btn h3 { color: #fff; margin-bottom: 10px; font-size: 1.3rem; }
+        .mode-btn p { font-size: 0.9rem; color: #888; margin: 0; }
+
+        /* Вопросы и картинки */
+        .question-image-container { width: 100%; margin-bottom: 25px; border-radius: 8px; overflow: hidden; border: 2px solid #333; background: #000; display: flex; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .question-image { width: 100%; max-height: 350px; object-fit: cover; filter: sepia(0.3) contrast(1.1); transition: filter 0.3s; }
+        .question-image:hover { filter: sepia(0) contrast(1); }
+        
+        .round-badge { display: inline-block; background: #9b1818; color: white; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .question-title { font-weight: 700; font-size: 1.2rem; margin-bottom: 20px; color: #d4af37; line-height: 1.5; }
+        
+        .options-grid { display: grid; gap: 12px; margin-bottom: 30px; }
+        .option-label { display: flex; align-items: center; background: #252525; padding: 16px 20px; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; font-weight: 600; color: #ccc; }
+        .option-label:hover { background: #2e2e2e; }
+        .option-label input[type="radio"] { display: none; }
+        .custom-radio { width: 20px; height: 20px; border: 2px solid #888; border-radius: 50%; margin-right: 15px; position: relative; flex-shrink: 0; }
+        .option-label input:checked + .custom-radio { border-color: #d4af37; background: #d4af37; box-shadow: inset 0 0 0 3px #1e1e1e; }
+        
+        /* Навигация */
+        .quiz-nav { display: flex; gap: 15px; justify-content: space-between; margin-top: 20px; }
+        .btn { padding: 15px 30px; border: none; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-primary { background-color: #9b1818; color: white; flex-grow: 1; }
+        .btn-primary:hover { background-color: #c92222; }
+        .btn-primary:disabled { background-color: #444; color: #777; cursor: not-allowed; }
+        .btn-secondary { background-color: transparent; color: #d4af37; border: 2px solid #d4af37; }
+        .btn-secondary:hover { background-color: #d4af37; color: #121212; }
+
+        /* Обратная связь */
+        .feedback { margin-top: 20px; padding: 20px; border-radius: 8px; display: none; }
+        .feedback.correct { background: rgba(59, 165, 93, 0.1); border-left: 5px solid #3ba55d; }
+        .feedback.wrong { background: rgba(155, 24, 24, 0.1); border-left: 5px solid #9b1818; }
+        .feedback-status { font-weight: 700; margin-bottom: 10px; display: block; }
+        .feedback.correct .feedback-status { color: #3ba55d; }
+        .feedback.wrong .feedback-status { color: #ff6b6b; }
+        .feedback-explain { font-size: 0.95rem; color: #ccc; font-style: italic; line-height: 1.6; }
+
+        /* Результаты */
+        .final-results { text-align: center; display: none; }
+        .final-score { font-family: 'Playfair Display', serif; font-size: 3rem; color: #d4af37; margin: 20px 0; }
+        .results-list { text-align: left; margin-top: 30px; }
+        .result-item { background: #252525; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #3ba55d; position: relative; overflow: hidden; display: flex; gap: 20px; flex-wrap: wrap; }
+        
+        /* Контейнер для картинки в результатах */
+        .result-media { flex-shrink: 0; width: 150px; display: flex; flex-direction: column; align-items: center; }
+        .result-img { width: 100%; height: auto; border-radius: 6px; border: 2px solid #444; }
+        .result-caption { font-size: 0.75rem; color: #aaa; text-align: center; margin-top: 8px; line-height: 1.3; }
+        
+        .result-text { flex-grow: 1; }
+        .result-q { font-weight: 700; color: #fff; margin-bottom: 10px; }
+        .result-a { color: #d4af37; font-weight: 600; margin-bottom: 10px; }
+        .result-exp { font-size: 0.9rem; color: #999; font-style: italic; border-top: 1px dashed #444; padding-top: 10px; clear: both; }
+
+        /* Командный режим */
+        .team-mode .question-title { font-size: 1.5rem; text-align: center; }
+        .team-mode .option-label { font-size: 1.2rem; justify-content: center; padding: 20px; cursor: default; }
+        .team-mode .option-label:hover { background: #252525; }
+        .team-mode .custom-radio { display: none; }
+        .team-mode .option-label::before { content: attr(data-letter) ") "; margin-right: 10px; color: #d4af37; font-weight: bold; }
+        .team-mode .question-image { max-height: 250px; }
+
+        @media (max-width: 768px) {
+            .quiz-card { padding: 20px; }
+            .mode-buttons { flex-direction: column; align-items: center; }
+            .team-mode .question-title { font-size: 1.1rem; }
+            .team-mode .option-label { font-size: 0.95rem; padding: 12px; }
+            .question-image { max-height: 200px; }
+            .result-item { flex-direction: column; align-items: center; text-align: center; }
+            .result-media { width: 100%; max-width: 250px; }
+            .result-exp { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-wrapper">
+    <div class="quiz-card" id="quizContainer">
+        
+        <div id="modeSelection" class="mode-selection">
+            <h2>Испытание для знатоков</h2>
+            <p>Выберите формат прохождения квиза (3 раунда, 16 вопросов)</p>
+            <div class="mode-buttons">
+                <div class="mode-btn" onclick="startQuiz('solo')">
+                    <div class="icon">🎯</div>
+                    <h3>Соло-игра</h3>
+                    <p>Для одного игрока. Мгновенная проверка ответов.</p>
+                </div>
+                <div class="mode-btn" onclick="startQuiz('team')">
+                    <div class="icon">👥</div>
+                    <h3>Командный квиз</h3>
+                    <p>Для игры на проекторе. Ведущий читает, команды пишут.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="questionScreen" style="display: none;">
+            <div id="questionCounter" style="color: #888; font-size: 0.9rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; text-align: center;"></div>
+            <div id="questionContent"></div>
+            <div id="soloFeedback" class="feedback"></div>
+            <div class="quiz-nav" id="quizNavigation">
+                <button id="actionBtn" class="btn btn-primary" onclick="handleAction()">Ответить</button>
+            </div>
+        </div>
+
+        <div id="resultsScreen" class="final-results">
+            <h2 style="font-family: 'Playfair Display', serif; color: #fff; font-size: 2rem;">Квиз завершен!</h2>
+            <div class="final-score" id="finalScoreText"></div>
+            <p id="finalMessage" style="color: #aaa; font-size: 1.1rem; margin-bottom: 30px;"></p>
+            <div class="results-list" id="resultsList"></div>
+            <button class="btn btn-secondary" style="margin-top: 30px;" onclick="location.reload()">Пройти заново</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // ПОЛНЫЙ СПИСОК ВОПРОСОВ (3 раунда)
     const QUIZ_DATA = [
         // --- РАУНД 1: ОБЩИЕ ЗНАНИЯ ---
         { round: "Раунд 1. Общие знания", q: "Когда началась Великая Отечественная война?", image: "img/r1-q1-1941.jpg", caption: "Туляки уезжают на фронт. Тула, 1941 г.", options: ["1941", "1939", "1945"], correct: 0, explain: "Великая Отечественная война началась 22 июня 1941 года с вероломного нападения фашистской Германии на Советский Союз." },
@@ -15,9 +151,181 @@
         { round: "Раунд 2. Кадры из фильмов", q: "Кадр из какого фильма изображен на картинке?", image: "img/r2-q3-film.jpg", answerImage: "img/r2-answ3-film.jpg", caption: "Фильм «Битва за Севастополь»", options: ["«Снайпер»", "«Сталинград»", "«Битва за Севастополь»"], correct: 2, explain: "Кадр из фильма «Битва за Севастополь» (2015) о легендарном снайпере Людмиле Павличенко." },
         { round: "Раунд 2. Кадры из фильмов", q: "Кадр из какого фильма изображен на картинке?", image: "img/r2-q4-film.jpg", answerImage: "img/r2-answ4-film.jpg", caption: "Фильм «Несокрушимый»", options: ["«Т-34»", "«Несокрушимый»", "«А зори здесь тихие»"], correct: 1, explain: "Кадр из фильма «Несокрушимый» (2018), основанного на реальной истории экипажа танка КВ-1 под командованием Семена Коновалова." },
 
-        // --- РАУНД 3: НАШИ ГЕРОИ (4 вопроса) ---
+        // --- РАУНД 3: НАШИ ГЕРОИ ---
         { round: "Раунд 3. Наши герои", q: "Кого называют тульским Гастелло?", image: "img/r3-q1-chernov.jpg", caption: "Лётчик А.В. Чернов", options: ["Н.К. Аносов", "И.Г. Едунов", "А.В. Чернов"], correct: 2, explain: "Александр Васильевич Чернов — тульский лётчик, повторивший подвиг Николая Гастелло, направив свой горящий самолёт на скопление вражеской техники." },
         { round: "Раунд 3. Наши герои", q: "Какая военная специальность у знаменитого «русского медведя» из Тулы и как его зовут?", image: "img/r3-q2-tokarev.jpg", caption: "Н.А. Токарев", options: ["Н.А. Токарев", "О.П. Матвеев", "А.В. Чернов"], correct: 0, explain: "Николай Александрович Токарев — знаменитый тульский оружейник, создатель пистолета ТТ. Его называли «русским медведем» за силу и упорство." },
         { round: "Раунд 3. Наши герои", q: "Какая школа воспитала четверых Героев Советского Союза?", image: "img/r3-q3-school.jpg", caption: "Школа №1", options: ["№1", "№2", "№28"], correct: 0, explain: "Школа №1 города Тулы воспитала четверых Героев Советского Союза: Булата, Козлова, Суденского и Токарева." },
         { round: "Раунд 3. Наши герои", q: "Сколько лет исполнилось Вале Паршутину в день, когда он смело раз за разом относил патроны пулеметчику и погиб?", image: "img/r4-q1-valya.jpg", caption: "Валя Паршутин с семьей", options: ["10 лет", "12 лет", "14 лет"], correct: 1, explain: "Валя погиб 29 октября 1941 года в свой день рождения. Ему исполнилось 12 лет. Он трижды доставлял патроны под огнем, а на третий раз был сражен пулей снайпера." }
     ];
+
+    let currentMode = 'solo'; 
+    let currentIndex = 0;
+    let soloAnswers = []; 
+    let isAnswered = false; 
+
+    const container = document.getElementById('quizContainer');
+    const modeScreen = document.getElementById('modeSelection');
+    const qScreen = document.getElementById('questionScreen');
+    const resScreen = document.getElementById('resultsScreen');
+    const qContent = document.getElementById('questionContent');
+    const feedback = document.getElementById('soloFeedback');
+    const actionBtn = document.getElementById('actionBtn');
+    const counter = document.getElementById('questionCounter');
+
+    function startQuiz(mode) {
+        currentMode = mode;
+        currentIndex = 0;
+        soloAnswers = [];
+        modeScreen.style.display = 'none';
+        qScreen.style.display = 'block';
+        
+        if (mode === 'team') { container.classList.add('team-mode'); } 
+        else { container.classList.remove('team-mode'); }
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        isAnswered = false;
+        const q = QUIZ_DATA[currentIndex];
+        
+        counter.innerHTML = `<span class="round-badge">${q.round}</span><br>Вопрос ${currentIndex + 1} из ${QUIZ_DATA.length}`;
+        
+        let html = `
+            <div class="question-image-container">
+                <img src="${q.image}" class="question-image" alt="Иллюстрация" onerror="this.style.display='none'; this.parentElement.style.display='none';">
+            </div>
+            <div class="question-title">${q.q}</div>
+            <div class="options-grid">
+        `;
+        
+        q.options.forEach((opt, i) => {
+            if (currentMode === 'solo') {
+                html += `
+                    <label class="option-label">
+                        <input type="radio" name="q_${currentIndex}" value="${i}" onchange="enableSoloBtn()">
+                        <span class="custom-radio"></span>
+                        <span class="text">${opt}</span>
+                    </label>
+                `;
+            } else {
+                const letter = String.fromCharCode(1040 + i); 
+                html += `<div class="option-label" data-letter="${letter}">${opt}</div>`;
+            }
+        });
+        html += `</div>`;
+        
+        qContent.innerHTML = html;
+        feedback.style.display = 'none';
+        feedback.className = 'feedback';
+        
+        if (currentMode === 'solo') {
+            actionBtn.textContent = 'Ответить';
+            actionBtn.disabled = true; 
+        } else {
+            actionBtn.textContent = (currentIndex === QUIZ_DATA.length - 1) ? 'Показать ответы' : 'Следующий вопрос';
+            actionBtn.disabled = false;
+        }
+    }
+
+    function enableSoloBtn() { if (!isAnswered) actionBtn.disabled = false; }
+
+    function handleAction() {
+        if (currentMode === 'solo') {
+            if (isAnswered) {
+                currentIndex++;
+                if (currentIndex < QUIZ_DATA.length) { renderQuestion(); } else { showSoloResults(); }
+            } else {
+                const selected = document.querySelector(`input[name="q_${currentIndex}"]:checked`);
+                if (!selected) return;
+                const answerIdx = parseInt(selected.value);
+                soloAnswers.push(answerIdx);
+                const isCorrect = answerIdx === QUIZ_DATA[currentIndex].correct;
+                
+                feedback.style.display = 'block';
+                feedback.classList.add(isCorrect ? 'correct' : 'wrong');
+                feedback.innerHTML = `
+                    <span class="feedback-status">${isCorrect ? '✓ Верно!' : '✗ Ошибка'}</span>
+                    ${!isCorrect ? `<div style="margin-bottom:10px; color:#ccc;">Правильный ответ: <b>${QUIZ_DATA[currentIndex].options[QUIZ_DATA[currentIndex].correct]}</b></div>` : ''}
+                    <div class="feedback-explain">${QUIZ_DATA[currentIndex].explain}</div>
+                `;
+                
+                isAnswered = true;
+                actionBtn.textContent = (currentIndex === QUIZ_DATA.length - 1) ? 'Узнать результат' : 'Следующий вопрос';
+                document.querySelectorAll(`input[name="q_${currentIndex}"]`).forEach(inp => inp.disabled = true);
+            }
+        } else {
+            currentIndex++;
+            if (currentIndex < QUIZ_DATA.length) { renderQuestion(); } else { showTeamResults(); }
+        }
+    }
+
+    function getResultMediaHTML(q) {
+        const imgSrc = q.answerImage ? q.answerImage : q.image;
+        const captionText = q.caption ? q.caption : '';
+        return `
+            <div class="result-media">
+                <img src="${imgSrc}" class="result-img" alt="Фото" onerror="this.style.display='none';">
+                ${captionText ? `<div class="result-caption">${captionText}</div>` : ''}
+            </div>
+        `;
+    }
+
+    function showSoloResults() {
+        qScreen.style.display = 'none';
+        resScreen.style.display = 'block';
+        
+        let score = 0;
+        soloAnswers.forEach((ans, i) => { if (ans === QUIZ_DATA[i].correct) score++; });
+        
+        document.getElementById('finalScoreText').textContent = `${score} из ${QUIZ_DATA.length}`;
+        
+        let msg = score >= QUIZ_DATA.length * 0.8 ? "Идеально! Вы настоящий знаток истории родного края." : (score >= QUIZ_DATA.length * 0.5 ? "Отличный результат! Вы хорошо знаете историю." : "Стоит перечитать материалы сайта и попробовать снова.");
+        document.getElementById('finalMessage').textContent = msg;
+        
+        let html = "";
+        QUIZ_DATA.forEach((q, i) => {
+            const isCorrect = soloAnswers[i] === q.correct;
+            html += `
+                <div class="result-item" style="border-left-color: ${isCorrect ? '#3ba55d' : '#9b1818'};">
+                    ${getResultMediaHTML(q)}
+                    <div class="result-text">
+                        <div class="result-q">${i + 1}. ${q.q}</div>
+                        <div class="result-a" style="color: ${isCorrect ? '#3ba55d' : '#ff6b6b'};">
+                            Ваш ответ: ${q.options[soloAnswers[i]]}
+                        </div>
+                        ${!isCorrect ? `<div style="color:#d4af37; margin-bottom:10px;">Правильный ответ: <b>${q.options[q.correct]}</b></div>` : ''}
+                        <div class="result-exp">${q.explain}</div>
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('resultsList').innerHTML = html;
+    }
+
+    function showTeamResults() {
+        qScreen.style.display = 'none';
+        resScreen.style.display = 'block';
+        container.classList.remove('team-mode');
+        
+        document.querySelector('.final-score').style.display = 'none'; 
+        document.getElementById('finalMessage').textContent = "Правильные ответы для подсчета баллов:";
+        
+        let html = "";
+        QUIZ_DATA.forEach((q, i) => {
+            const correctLetter = String.fromCharCode(1040 + q.correct); 
+            html += `
+                <div class="result-item">
+                    ${getResultMediaHTML(q)}
+                    <div class="result-text">
+                        <div class="result-q">${i + 1}. ${q.q}</div>
+                        <div class="result-a">Правильный ответ: ${correctLetter}) ${q.options[q.correct]}</div>
+                        <div class="result-exp">${q.explain}</div>
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('resultsList').innerHTML = html;
+    }
+</script>
+</body>
+</html>
