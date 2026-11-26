@@ -25,23 +25,25 @@
 
         body {
             background-color: var(--bg-dark);
-            /* Фон "обожженная бумага" */
+            /* Фон "обожженная бумага" с виньеткой */
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(201, 107, 44, 0.15) 0%, transparent 70%),
+                radial-gradient(circle at 50% 0%, rgba(201, 107, 44, 0.1) 0%, transparent 70%),
                 radial-gradient(circle at 10% 90%, rgba(138, 28, 28, 0.1) 0%, transparent 60%),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.05"/></svg>');
+                radial-gradient(circle at 50% 50%, transparent 50%, rgba(0,0,0,0.6) 100%), /* Виньетка */
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.04"/></svg>');
+            background-attachment: fixed;
             color: var(--text-main);
             font-family: 'Montserrat', sans-serif;
             margin: 0;
-            height: 100vh; /* Фиксируем высоту под экран */
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* Убираем прокрутку страницы */
+            padding: 20px;
             position: relative;
         }
 
-        /* Плывущие цитаты (стали ярче и светятся) */
+        /* Плывущие цитаты (яркие, светящиеся) */
         .floating-quotes-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0; overflow: hidden;
@@ -49,8 +51,8 @@
         .floating-quote {
             position: absolute; bottom: -100px;
             font-family: 'Playfair Display', serif; font-size: 1.6rem;
-            color: rgba(212, 175, 55, 0.4); /* Ярче */
-            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4); /* Легкое свечение */
+            color: rgba(212, 175, 55, 0.4);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
             white-space: nowrap;
             animation: floatUpQuote linear infinite;
         }
@@ -61,44 +63,29 @@
             100% { transform: translateY(-120vh) rotate(5deg); opacity: 0; }
         }
 
-        .quiz-wrapper { 
-            width: 100%; 
-            max-width: 900px; 
-            position: relative; 
-            z-index: 1; 
-            height: 95vh; /* Ограничиваем высоту */
-            display: flex;
-            flex-direction: column;
-        }
+        .quiz-wrapper { width: 100%; max-width: 900px; position: relative; z-index: 1; margin: auto; }
 
         .quiz-card {
             background-color: var(--bg-panel);
-            /* Текстура пергамента на карточке */
             background-image: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 100%);
             border-radius: 12px; 
             border: 2px solid var(--border-color); 
             border-top: 4px solid var(--accent-orange);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8), inset 0 0 50px rgba(0,0,0,0.5);
+            /* Свечение вокруг карточки */
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8), inset 0 0 50px rgba(0,0,0,0.5), 0 0 30px rgba(201, 107, 44, 0.1);
             position: relative; 
-            display: flex; 
-            flex-direction: column;
-            height: 100%;
-            overflow: hidden;
+            padding: 40px;
+            animation: cardAppear 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Внутренняя область, которая может скроллиться, если контента много */
-        .quiz-scroll-area {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 30px 40px;
+        @keyframes cardAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .quiz-scroll-area::-webkit-scrollbar { width: 8px; }
-        .quiz-scroll-area::-webkit-scrollbar-track { background: #1a1512; }
-        .quiz-scroll-area::-webkit-scrollbar-thumb { background: var(--accent-orange); border-radius: 4px; }
 
         /* === ЭКРАН СТАРТА === */
         .mode-selection { text-align: center; }
-        .mode-selection h2 { font-family: 'Playfair Display', serif; color: var(--accent-gold); font-size: 2.5rem; margin-bottom: 10px; }
+        .mode-selection h2 { font-family: 'Playfair Display', serif; color: var(--accent-gold); font-size: 2.5rem; margin-bottom: 10px; text-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
         .mode-selection .subtitle { color: var(--text-muted); margin-bottom: 20px; font-size: 1.1rem; }
         
         .user-form { margin-bottom: 20px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
@@ -107,7 +94,7 @@
             border: 2px solid var(--border-color); color: white; font-family: 'Montserrat', sans-serif; 
             font-size: 1rem; outline: none; transition: border 0.3s; width: 100%; max-width: 300px;
         }
-        .user-input:focus { border-color: var(--accent-gold); }
+        .user-input:focus { border-color: var(--accent-gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
         .user-input::placeholder { color: #6b5a4a; }
         .form-hint { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; font-style: italic; }
 
@@ -117,7 +104,7 @@
             cursor: pointer; transition: all 0.3s; flex: 1; min-width: 250px; max-width: 340px; 
             display: flex; flex-direction: column; align-items: center; text-align: center;
         }
-        .mode-btn:hover { border-color: var(--accent-gold); background: #2b221b; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .mode-btn:hover { border-color: var(--accent-gold); background: #2b221b; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 20px rgba(212, 175, 55, 0.1); }
         .mode-btn .icon { font-size: 3rem; margin-bottom: 15px; }
         .mode-btn h3 { color: #fff; margin-bottom: 10px; font-size: 1.3rem; }
         .mode-btn p { font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.4; }
@@ -129,42 +116,46 @@
         .round-badge { background: var(--accent-red); color: white; padding: 6px 14px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
         .score-counter { font-weight: 700; color: var(--accent-gold); font-size: 1rem; background: rgba(201, 107, 44, 0.15); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--accent-orange); }
 
-        .question-image-container { width: 100%; height: 280px; margin-bottom: 20px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border-color); background: #000; display: flex; justify-content: center; align-items: center; }
+        .question-image-container { width: 100%; max-height: 350px; margin-bottom: 25px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border-color); background: #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .question-image { max-width: 100%; max-height: 100%; object-fit: contain; filter: sepia(0.4) contrast(1.1); }
         
-        .question-title { font-weight: 700; font-size: 1.25rem; margin-bottom: 15px; color: var(--accent-gold); line-height: 1.4; }
-        .options-grid { display: grid; gap: 10px; margin-bottom: 15px; }
-        .option-label { display: flex; align-items: center; background: #1f1813; padding: 14px 18px; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; font-weight: 600; color: #d1c7bb; font-size: 0.95rem; }
-        .option-label:hover { background: #2b221b; border-color: var(--border-color); }
+        .question-title { font-weight: 700; font-size: 1.25rem; margin-bottom: 20px; color: var(--accent-gold); line-height: 1.4; }
+        .options-grid { display: grid; gap: 12px; margin-bottom: 20px; }
+        .option-label { display: flex; align-items: center; background: #1f1813; padding: 16px 18px; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; font-weight: 600; color: #d1c7bb; font-size: 0.95rem; }
+        .option-label:hover { background: #2b221b; border-color: var(--border-color); transform: translateX(5px); }
         .option-label input[type="radio"] { display: none; }
-        .custom-radio { width: 20px; height: 20px; border: 2px solid #6b5a4a; border-radius: 50%; margin-right: 15px; flex-shrink: 0; }
-        .option-label input:checked + .custom-radio { border-color: var(--accent-gold); background: var(--accent-gold); box-shadow: inset 0 0 0 3px #1f1813; }
+        .custom-radio { width: 20px; height: 20px; border: 2px solid #6b5a4a; border-radius: 50%; margin-right: 15px; flex-shrink: 0; transition: all 0.2s; }
+        .option-label input:checked + .custom-radio { border-color: var(--accent-gold); background: var(--accent-gold); box-shadow: inset 0 0 0 3px #1f1813, 0 0 10px var(--accent-gold); }
 
-        /* Кнопка закреплена внизу */
-        .quiz-nav-fixed { 
-            padding: 20px 40px; 
-            background: rgba(43, 34, 27, 0.95); 
-            border-top: 1px solid var(--border-color); 
-            display: flex; 
-            justify-content: flex-end; 
-            backdrop-filter: blur(5px);
-        }
+        /* === КНОПКИ === */
+        .quiz-nav { display: flex; justify-content: flex-end; margin-top: 25px; }
         .btn { padding: 15px 30px; border: none; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
         .btn-primary { background-color: var(--accent-orange); color: white; box-shadow: 0 4px 15px rgba(201, 107, 44, 0.4); }
-        .btn-primary:hover { background-color: #e07b39; }
-        .btn-primary:disabled { background-color: #3a2d22; color: #6b5a4a; cursor: not-allowed; box-shadow: none; }
+        .btn-primary:hover { background-color: #e07b39; transform: translateY(-2px); }
+        .btn-primary:disabled { background-color: #3a2d22; color: #6b5a4a; cursor: not-allowed; box-shadow: none; transform: none; }
+        
+        /* Пульсация активной кнопки */
+        .btn-primary:not(:disabled) {
+            animation: pulseButton 2s infinite;
+        }
+        @keyframes pulseButton {
+            0% { box-shadow: 0 0 0 0 rgba(201, 107, 44, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(201, 107, 44, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(201, 107, 44, 0); }
+        }
+
         .btn-secondary { background-color: transparent; color: var(--accent-gold); border: 2px solid var(--accent-gold); }
         .btn-secondary:hover { background-color: var(--accent-gold); color: var(--bg-dark); }
 
-        .feedback { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; animation: slideIn 0.4s ease-out; }
+        .feedback { margin-top: 20px; padding: 20px; border-radius: 8px; display: none; animation: slideIn 0.4s ease-out; }
         .feedback.correct { background: rgba(74, 124, 89, 0.15); border-left: 5px solid var(--accent-green); }
         .feedback.wrong { background: rgba(138, 28, 28, 0.15); border-left: 5px solid var(--accent-red); }
-        .feedback-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .feedback-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
         .feedback-icon { font-size: 1.5rem; }
         .feedback-status { font-weight: 700; font-size: 1.1rem; }
         .feedback.correct .feedback-status { color: #7ebd8f; }
         .feedback.wrong .feedback-status { color: #e57373; }
-        .feedback-explain { font-size: 0.9rem; color: #cbd5e0; font-style: italic; line-height: 1.5; border-top: 1px dashed var(--border-color); padding-top: 8px; margin-top: 8px; }
+        .feedback-explain { font-size: 0.95rem; color: #cbd5e0; font-style: italic; line-height: 1.5; border-top: 1px dashed var(--border-color); padding-top: 10px; margin-top: 10px; }
 
         /* Анимация золотой звезды */
         .gold-star-anim {
@@ -206,50 +197,43 @@
         /* === БОЛЬШИЕ КАРТОЧКИ ОТВЕТОВ (КОМАНДЫ) === */
         .team-result-card {
             background: #1f1813; border-radius: 12px; border-left: 6px solid var(--accent-green);
-            padding: 25px; margin-bottom: 20px; animation: slideIn 0.4s ease;
-            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 30px; margin-bottom: 20px; animation: slideIn 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
-        .team-result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px dashed var(--border-color); padding-bottom: 10px; }
+        .team-result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px dashed var(--border-color); padding-bottom: 10px; }
         .team-result-q-num { font-size: 1.1rem; color: var(--text-muted); font-weight: bold; }
-        .team-result-q-text { font-size: 1.3rem; color: #fff; font-weight: 600; margin-bottom: 15px; line-height: 1.4; }
-        .team-result-image-container { width: 100%; height: 250px; background: #000; border-radius: 8px; margin-bottom: 15px; border: 2px solid var(--border-color); display: flex; justify-content: center; align-items: center; }
+        .team-result-q-text { font-size: 1.3rem; color: #fff; font-weight: 600; margin-bottom: 20px; line-height: 1.4; }
+        .team-result-image-container { width: 100%; height: 300px; background: #000; border-radius: 8px; margin-bottom: 20px; border: 2px solid var(--border-color); display: flex; justify-content: center; align-items: center; }
         .team-result-image { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .team-result-answer { font-size: 1.4rem; color: var(--accent-gold); background: rgba(201, 107, 44, 0.1); padding: 15px 20px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-weight: bold; border: 1px solid rgba(201, 107, 44, 0.3); }
-        .team-result-explain { font-size: 1.05rem; color: #cbd5e0; font-style: italic; line-height: 1.5; margin-bottom: 10px; }
-        .team-result-caption { font-size: 0.85rem; color: var(--text-muted); text-align: center; font-style: italic; }
+        .team-result-answer { font-size: 1.5rem; color: var(--accent-gold); background: rgba(201, 107, 44, 0.1); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold; border: 1px solid rgba(201, 107, 44, 0.3); }
+        .team-result-explain { font-size: 1.1rem; color: #cbd5e0; font-style: italic; line-height: 1.6; margin-bottom: 15px; }
+        .team-result-caption { font-size: 0.9rem; color: var(--text-muted); text-align: center; font-style: italic; }
 
-        /* Кнопка закреплена внизу для командного режима */
+        /* Панель для командного режима */
         .team-bottom-panel {
-            padding: 20px 40px;
-            background: rgba(43, 34, 27, 0.95);
-            border-top: 1px solid var(--border-color);
+            padding: 20px 0;
             display: flex;
             justify-content: center;
-            backdrop-filter: blur(5px);
-            position: sticky;
-            bottom: 0;
-            z-index: 10;
+            margin-top: 20px;
         }
 
         .team-mode .question-title { font-size: 1.4rem; text-align: center; }
-        .team-mode .option-label { font-size: 1.1rem; justify-content: center; padding: 18px; cursor: default; }
-        .team-mode .option-label:hover { background: #1f1813; }
+        .team-mode .option-label { font-size: 1.1rem; justify-content: center; padding: 20px; cursor: default; }
+        .team-mode .option-label:hover { background: #1f1813; transform: none; }
         .team-mode .custom-radio { display: none; }
         .team-mode .option-label::before { content: attr(data-letter) ") "; margin-right: 10px; color: var(--accent-gold); font-weight: bold; }
-        .team-mode .quiz-nav-fixed { justify-content: center; }
+        .team-mode .quiz-nav { justify-content: center; }
 
         @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 768px) {
-            .quiz-wrapper { height: 100vh; }
-            .quiz-scroll-area { padding: 20px; }
-            .quiz-nav-fixed { padding: 15px 20px; }
+            .quiz-card { padding: 20px; }
             .mode-buttons { flex-direction: column; align-items: center; }
             .team-mode .question-title { font-size: 1.1rem; }
             .team-mode .option-label { font-size: 0.95rem; padding: 12px; }
-            .question-image-container { height: 200px; }
+            .question-image-container { max-height: 250px; }
             .cert-title { font-size: 2rem; }
-            .team-result-image-container { height: 150px; }
+            .team-result-image-container { height: 200px; }
         }
     </style>
 </head>
@@ -265,8 +249,8 @@
 <div class="quiz-wrapper">
     <div class="quiz-card" id="quizContainer">
         
-        <!-- ЭКРАН ВЫБОРА (без фиксированной кнопки внизу, она тут не нужна) -->
-        <div id="modeSelection" class="mode-selection" style="padding: 40px; overflow-y: auto; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+        <!-- ЭКРАН ВЫБОРА -->
+        <div id="modeSelection" class="mode-selection">
             <h2>Испытание для знатоков</h2>
             <p class="subtitle">Выберите формат прохождения</p>
             
@@ -291,26 +275,20 @@
         </div>
 
         <!-- ЭКРАН ВОПРОСОВ -->
-        <div id="questionScreen" style="display: none; height: 100%; display: flex; flex-direction: column;">
-            
-            <!-- Скроллируемая область с контентом -->
-            <div class="quiz-scroll-area">
-                <div class="quiz-header">
-                    <div id="roundBadge" class="round-badge">Раунд 1</div>
-                    <div id="scoreCounter" class="score-counter">Правильно: 0 / 16</div>
-                </div>
-                <div id="questionContent"></div>
-                <div id="soloFeedback" class="feedback"></div>
+        <div id="questionScreen" style="display: none;">
+            <div class="quiz-header">
+                <div id="roundBadge" class="round-badge">Раунд 1</div>
+                <div id="scoreCounter" class="score-counter">Правильно: 0 / 16</div>
             </div>
-
-            <!-- Фиксированная кнопка внизу -->
-            <div class="quiz-nav-fixed" id="quizNavigation">
+            <div id="questionContent"></div>
+            <div id="soloFeedback" class="feedback"></div>
+            <div class="quiz-nav" id="quizNavigation">
                 <button id="actionBtn" class="btn btn-primary" onclick="handleAction()">Ответить</button>
             </div>
         </div>
 
         <!-- ЭКРАН РЕЗУЛЬТАТОВ (СОЛО) -->
-        <div id="resultsScreen" class="final-results" style="height: 100%; overflow-y: auto; padding: 40px;">
+        <div id="resultsScreen" class="final-results">
             <div id="certificateBlock" class="certificate">
                 <div class="cert-title">Грамота</div>
                 <div class="cert-subtitle">за успешное прохождение исторического квиза</div>
@@ -338,10 +316,8 @@
         </div>
 
         <!-- ЭКРАН РЕЗУЛЬТАТОВ (КОМАНДЫ) -->
-        <div id="teamResultsScreen" class="final-results" style="display: none; height: 100%; display: flex; flex-direction: column;">
-            <div class="quiz-scroll-area" style="flex-grow: 1; padding: 30px;">
-                <div id="teamResultsContent"></div>
-            </div>
+        <div id="teamResultsScreen" class="final-results" style="display: none;">
+            <div id="teamResultsContent"></div>
             <div class="team-bottom-panel">
                 <button id="teamNextBtn" class="btn btn-primary" onclick="nextTeamResult()">Следующий ответ</button>
             </div>
@@ -427,7 +403,8 @@
         } else { 
             container.classList.remove('team-mode'); 
         }
-        qScreen.style.display = 'flex';
+        qScreen.style.display = 'block';
+        window.scrollTo(0, 0); // Скролл вверх при старте
         renderQuestion();
     }
 
@@ -445,9 +422,6 @@
         roundBadge.textContent = q.round;
         updateScoreCounter();
         
-        // Скроллим внутреннюю область вверх при новом вопросе
-        document.querySelector('.quiz-scroll-area').scrollTop = 0;
-
         let html = `
             <div class="question-image-container">
                 <img src="${q.image}" class="question-image" alt="Иллюстрация" onerror="this.style.display='none'; this.parentElement.style.display='none';">
@@ -483,6 +457,11 @@
             actionBtn.textContent = (currentIndex === QUIZ_DATA.length - 1) ? 'Показать ответы' : 'Следующий вопрос';
             actionBtn.disabled = false;
         }
+        
+        // Плавный скролл вверх при появлении нового вопроса
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 50);
     }
 
     function enableSoloBtn() { if (!isAnswered) actionBtn.disabled = false; }
@@ -545,6 +524,7 @@
     function showSoloResults() {
         qScreen.style.display = 'none';
         resScreen.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         
         document.getElementById('certName').textContent = playerName;
         document.getElementById('certClass').textContent = playerClass;
@@ -606,8 +586,9 @@
 
     function showTeamReview() {
         qScreen.style.display = 'none';
-        teamResScreen.style.display = 'flex';
+        teamResScreen.style.display = 'block';
         teamAnswersReviewIndex = 0;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         renderTeamReviewCard();
     }
 
@@ -640,9 +621,6 @@
         
         document.getElementById('teamResultsContent').innerHTML = html;
         
-        // Скроллим область с ответом вверх при переключении
-        document.querySelector('#teamResultsScreen .quiz-scroll-area').scrollTop = 0;
-
         const nextBtn = document.getElementById('teamNextBtn');
         if (teamAnswersReviewIndex === QUIZ_DATA.length - 1) {
             nextBtn.textContent = 'Завершить';
