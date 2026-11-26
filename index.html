@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Квиз Великая Отечественная Война | Оборона Тулы</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -692,23 +692,33 @@
     // Масштабирование карточки под размер окна — прокрутка не нужна
     function fitToWindow() {
         wrapper.style.transform = 'none';
+        // visualViewport — реальная видимая область (без навбара браузера/клавиатуры)
+        const vv = window.visualViewport;
+        const viewH = vv ? vv.height : window.innerHeight;
+        const viewW = vv ? vv.width : window.innerWidth;
+        const offTop = vv ? vv.offsetTop : 0;
+        const offLeft = vv ? vv.offsetLeft : 0;
         // offsetTop/offsetLeft — layout-координаты, не зависят от transform и его анимации
         // + резерв под блок фидбека, чтобы при ответе масштаб не менялся
-        const reserve = (currentMode === 'solo' && qScreen.style.display === 'flex' && !isAnswered) ? 180 : 0;
+        const reserve = (currentMode === 'solo' && qScreen.style.display === 'flex' && !isAnswered) ? 210 : 0;
         const h = container.offsetHeight + reserve;
         const w = container.offsetWidth;
         const scale = Math.min(1,
-            (window.innerHeight - 30) / h,
-            (window.innerWidth - 30) / w
+            (viewH - 20) / h,
+            (viewW - 20) / w
         );
         // После scale вокруг центра бокса считаем, где окажется контент, и центрируем его в окне
         const curTop = wrapper.offsetTop + h * (1 - scale) / 2;
         const curLeft = wrapper.offsetLeft + w * (1 - scale) / 2;
-        const wantTop = Math.max(15, (window.innerHeight - scale * h) / 2);
-        const wantLeft = Math.max(15, (window.innerWidth - scale * w) / 2);
+        const wantTop = offTop + Math.max(10, (viewH - scale * h) / 2);
+        const wantLeft = offLeft + Math.max(10, (viewW - scale * w) / 2);
         wrapper.style.transform = `translate(${wantLeft - curLeft}px, ${wantTop - curTop}px) scale(${scale})`;
     }
     window.addEventListener('resize', fitToWindow);
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', fitToWindow);
+        window.visualViewport.addEventListener('scroll', fitToWindow);
+    }
     window.addEventListener('load', fitToWindow);
     document.fonts.ready.then(fitToWindow);
     fitToWindow();
@@ -940,6 +950,9 @@
                 renderStars(currentIndex);
                 actionBtn.textContent = (currentIndex === QUIZ_DATA.length - 1) ? 'Узнать результат' : 'Следующий вопрос';
                 document.querySelectorAll(`input[name="q_${currentIndex}"]`).forEach(inp => inp.disabled = true);
+                // Мягкая докоррекция масштаба — резерв 210px покрывает почти весь фидбек,
+                // поэтому сдвиг минимальный, а кнопка гарантированно остаётся в кадре
+                fitToWindow();
             }
         } else {
             fadeTransition(() => {
