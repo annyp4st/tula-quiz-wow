@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Квиз ВОВ | Память Тулы</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Подключаем библиотеку для сохранения грамоты -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
@@ -36,25 +35,17 @@
             overflow-x: hidden;
         }
 
-        /* === ПЛЫВУЩИЕ ЦИТАТЫ НА ФОНЕ === */
+        /* === ПЛЫВУЩИЕ ЦИТАТЫ === */
         .floating-quotes-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
         }
-
         .floating-quote {
-            position: absolute;
-            bottom: -100px;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: rgba(197, 160, 89, 0.07); /* Очень прозрачный золотой */
-            white-space: nowrap;
+            position: absolute; bottom: -100px;
+            font-family: 'Playfair Display', serif; font-size: 1.5rem;
+            color: rgba(197, 160, 89, 0.07); white-space: nowrap;
             animation: floatUpQuote linear infinite;
         }
-
         @keyframes floatUpQuote {
             0% { transform: translateY(0) rotate(-5deg); opacity: 0; }
             10% { opacity: 1; }
@@ -62,54 +53,35 @@
             100% { transform: translateY(-120vh) rotate(5deg); opacity: 0; }
         }
 
-        /* === ГЕОРГИЕВСКАЯ ЛЕНТА === */
         .ribbon {
             position: fixed; top: 0; left: 0; width: 100%; height: 6px;
             background: linear-gradient(to right, #000 20%, #f90 20%, #f90 40%, #000 40%, #000 60%, #f90 60%, #f90 80%, #000 80%);
             z-index: 1000;
         }
 
-        /* === КОНТЕЙНЕР === */
-        .quiz-wrapper {
-            width: 100%;
-            max-width: 850px;
-            position: relative;
-            z-index: 1; /* Поверх цитат */
-        }
+        .quiz-wrapper { width: 100%; max-width: 850px; position: relative; z-index: 1; }
 
         .quiz-card {
-            background-color: var(--bg-panel);
-            border-radius: 12px;
-            padding: 40px;
-            border: 1px solid var(--border-color);
-            border-top: 4px solid var(--accent-gold);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            position: relative;
-            overflow: hidden;
+            background-color: var(--bg-panel); border-radius: 12px; padding: 40px;
+            border: 1px solid var(--border-color); border-top: 4px solid var(--accent-gold);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; overflow: hidden;
         }
 
-        .quiz-card::before {
-            content: '★';
-            position: absolute;
-            top: -20px; right: -20px;
-            font-size: 150px;
-            color: rgba(197, 160, 89, 0.05);
-            pointer-events: none;
-        }
-
-        /* === ЭКРАН ВЫБОРА РЕЖИМА И ВВОДА ДАННЫХ === */
-        .mode-selection { text-align: center; position: relative; z-index: 1; }
+        /* === ЭКРАН СТАРТА === */
+        .mode-selection { text-align: center; }
         .mode-selection h2 { font-family: 'Playfair Display', serif; color: var(--accent-gold); font-size: 2.5rem; margin-bottom: 10px; }
-        .mode-selection .subtitle { color: var(--text-muted); margin-bottom: 25px; font-size: 1.1rem; }
+        .mode-selection .subtitle { color: var(--text-muted); margin-bottom: 20px; font-size: 1.1rem; }
         
         .user-form { margin-bottom: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
         .user-input { 
-            padding: 12px 20px; border-radius: 8px; background: #252525; 
+            padding: 15px 20px; border-radius: 8px; background: #252525; 
             border: 2px solid #444; color: white; font-family: 'Montserrat', sans-serif; 
             font-size: 1rem; outline: none; transition: border 0.3s; width: 100%; max-width: 300px;
         }
         .user-input:focus { border-color: var(--accent-gold); }
-        
+        .user-input::placeholder { color: #777; }
+        .form-hint { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px; font-style: italic; }
+
         .mode-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
         .mode-btn { 
             background: #252525; border: 2px solid #444; padding: 30px; border-radius: 10px; 
@@ -120,7 +92,6 @@
         .mode-btn .icon { font-size: 3rem; margin-bottom: 15px; }
         .mode-btn h3 { color: #fff; margin-bottom: 10px; font-size: 1.3rem; }
         .mode-btn p { font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1.4; }
-        
         .mode-btn.solo-btn { border-bottom: 4px solid var(--accent-green); }
         .mode-btn.team-btn { border-bottom: 4px solid var(--accent-red); }
 
@@ -129,7 +100,7 @@
         .round-badge { background: var(--accent-red); color: white; padding: 6px 14px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
         .score-counter { font-weight: 700; color: var(--accent-gold); font-size: 1rem; background: rgba(197, 160, 89, 0.1); padding: 6px 14px; border-radius: 20px; }
 
-        .question-image-container { width: 100%; height: 350px; margin-bottom: 25px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border-color); background: #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .question-image-container { width: 100%; height: 350px; margin-bottom: 25px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border-color); background: #000; display: flex; justify-content: center; align-items: center; }
         .question-image { max-width: 100%; max-height: 100%; object-fit: contain; filter: sepia(0.3) contrast(1.1); }
         
         .question-title { font-weight: 700; font-size: 1.2rem; margin-bottom: 20px; color: var(--accent-gold); line-height: 1.5; }
@@ -148,7 +119,6 @@
         .btn-secondary { background-color: transparent; color: var(--accent-gold); border: 2px solid var(--accent-gold); }
         .btn-secondary:hover { background-color: var(--accent-gold); color: var(--bg-dark); }
 
-        /* === ОБРАТНАЯ СВЯЗЬ === */
         .feedback { margin-top: 20px; padding: 20px; border-radius: 8px; display: none; animation: slideIn 0.4s ease-out; }
         .feedback.correct { background: rgba(59, 165, 93, 0.1); border-left: 5px solid var(--accent-green); }
         .feedback.wrong { background: rgba(138, 28, 28, 0.1); border-left: 5px solid var(--accent-red); }
@@ -170,6 +140,7 @@
             margin-bottom: 30px;
             position: relative;
             box-shadow: 0 0 40px rgba(197, 160, 89, 0.2);
+            color: white;
         }
         .certificate::before, .certificate::after {
             content: '★'; position: absolute; color: var(--accent-gold); font-size: 2rem; opacity: 0.5;
@@ -180,34 +151,84 @@
         .cert-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 5px; }
         .cert-subtitle { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text-muted); font-style: italic; margin-bottom: 30px; }
         
-        .cert-name { font-family: 'Playfair Display', serif; font-size: 2rem; color: #fff; border-bottom: 2px solid var(--accent-gold); display: inline-block; padding: 0 20px 10px; margin-bottom: 10px; }
-        .cert-class { font-size: 1.1rem; color: var(--accent-gold); margin-bottom: 25px; letter-spacing: 1px; }
+        .cert-user-info { margin-bottom: 25px; }
+        .cert-name { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #fff; border-bottom: 2px solid var(--accent-gold); display: inline-block; padding: 0 20px 5px; margin-bottom: 5px; }
+        .cert-class { font-size: 1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
         
-        .cert-score { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--accent-gold); line-height: 1; margin-bottom: 10px; text-shadow: 0 0 20px rgba(197, 160, 89, 0.5); }
-        .cert-score span { font-size: 1.2rem; color: var(--text-muted); text-shadow: none; }
+        .cert-score { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--accent-gold); line-height: 1; margin-bottom: 15px; text-shadow: 0 0 20px rgba(197, 160, 89, 0.5); }
+        .cert-score span { font-size: 1.2rem; color: var(--text-muted); text-shadow: none; font-family: 'Montserrat', sans-serif; }
         
         .cert-text { font-size: 1.1rem; color: #ddd; font-style: italic; max-width: 500px; margin: 0 auto 25px; line-height: 1.6; }
-        .cert-quote { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--accent-gold); margin-bottom: 20px; }
-        .cert-date { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; }
+        
+        .cert-quote-block { margin: 0 auto 30px; max-width: 600px; padding: 15px; background: rgba(197, 160, 89, 0.05); border-radius: 8px; border-left: 3px solid var(--accent-gold); }
+        .cert-quote { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--accent-gold); margin-bottom: 8px; line-height: 1.4; }
+        .cert-quote-author { font-size: 0.9rem; color: var(--text-muted); font-style: italic; text-align: right; }
+
+        .cert-date { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; border-top: 1px solid #333; padding-top: 15px; display: inline-block; }
         
         .cert-actions { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
 
-        /* === РЕЗУЛЬТАТЫ СПИСКОМ (В КОНЦЕ) === */
-        .results-list { text-align: left; margin-top: 30px; max-height: 400px; overflow-y: auto; padding-right: 10px; }
-        .results-list::-webkit-scrollbar { width: 8px; }
-        .results-list::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 4px; }
-        .results-list::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 4px; }
+        /* === БОЛЬШИЕ КАРТОЧКИ ОТВЕТОВ (ДЛЯ ВЕДУЩЕГО) === */
+        .team-result-card {
+            background: #252525;
+            border-radius: 12px;
+            border-left: 6px solid var(--accent-green);
+            padding: 30px;
+            margin-bottom: 20px;
+            animation: slideIn 0.4s ease;
+        }
+        
+        .team-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed #444;
+            padding-bottom: 10px;
+        }
+        
+        .team-result-q-num { font-size: 1.2rem; color: var(--text-muted); font-weight: bold; }
+        .team-result-q-text { font-size: 1.3rem; color: #fff; font-weight: 600; margin-bottom: 20px; line-height: 1.4; }
+        
+        .team-result-image-container {
+            width: 100%;
+            height: 300px;
+            background: #000;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #444;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .team-result-image { max-width: 100%; max-height: 100%; object-fit: contain; }
+        
+        .team-result-answer {
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            background: rgba(197, 160, 89, 0.1);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .team-result-explain {
+            font-size: 1.1rem;
+            color: #ddd;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .team-result-caption {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+        }
 
-        .result-item { background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #555; display: flex; gap: 15px; flex-wrap: wrap; }
-        .result-media { flex-shrink: 0; width: 120px; display: flex; flex-direction: column; align-items: center; }
-        .result-img { width: 100%; height: 80px; object-fit: contain; border-radius: 4px; border: 1px solid #444; background: #000; }
-        .result-caption { font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 5px; }
-        .result-text { flex-grow: 1; }
-        .result-q { font-weight: 700; color: #fff; margin-bottom: 8px; font-size: 0.95rem; }
-        .result-a { color: var(--accent-gold); font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; }
-        .result-exp { font-size: 0.85rem; color: #999; font-style: italic; border-top: 1px dashed #444; padding-top: 8px; }
-
-        /* === КОМАНДНЫЙ РЕЖИМ === */
         .team-mode .question-title { font-size: 1.5rem; text-align: center; }
         .team-mode .option-label { font-size: 1.2rem; justify-content: center; padding: 20px; cursor: default; }
         .team-mode .option-label:hover { background: #252525; }
@@ -223,22 +244,18 @@
             .team-mode .question-title { font-size: 1.1rem; }
             .team-mode .option-label { font-size: 0.95rem; padding: 12px; }
             .question-image-container { height: 250px; }
-            .result-item { flex-direction: column; align-items: center; text-align: center; }
-            .result-media { width: 100%; max-width: 200px; }
-            .result-exp { text-align: left; }
             .cert-title { font-size: 2rem; }
+            .team-result-image-container { height: 200px; }
         }
     </style>
 </head>
 <body>
 
-<!-- Плывущие цитаты на фоне -->
 <div class="floating-quotes-container">
     <div class="floating-quote" style="left: 5%; animation-duration: 25s; animation-delay: 0s;">«Я маленький, меня не заметят!» — Валя Паршутин</div>
     <div class="floating-quote" style="left: 35%; animation-duration: 30s; animation-delay: 5s;">«Раненых не бросаем! За мной!» — Комиссар Агеев</div>
     <div class="floating-quote" style="left: 65%; animation-duration: 28s; animation-delay: 10s;">«Врагу не взять Тулу!»</div>
     <div class="floating-quote" style="left: 85%; animation-duration: 35s; animation-delay: 2s;">«Пока мы помним — они живы»</div>
-    <div class="floating-quote" style="left: 20%; animation-duration: 22s; animation-delay: 15s;">«Героями не рождаются — героями становятся»</div>
 </div>
 
 <div class="ribbon"></div>
@@ -246,31 +263,30 @@
 <div class="quiz-wrapper">
     <div class="quiz-card" id="quizContainer">
         
-        <!-- ЭКРАН 1: ВЫБОР РЕЖИМА -->
         <div id="modeSelection" class="mode-selection">
             <h2>Испытание для знатоков</h2>
-            <p class="subtitle">Выберите формат прохождения и представьтесь</p>
+            <p class="subtitle">Выберите формат прохождения</p>
             
             <div class="user-form">
-                <input type="text" id="userName" class="user-input" placeholder="Ваше имя (обязательно)" maxlength="30">
-                <input type="text" id="userClass" class="user-input" placeholder="Ваш класс (например, 8-А)" maxlength="15">
+                <input type="text" id="userName" class="user-input" placeholder="Ваше имя (для грамоты)" maxlength="30">
+                <input type="text" id="userClass" class="user-input" placeholder="Ваш класс (для грамоты)" maxlength="15">
             </div>
+            <p class="form-hint">Введите имя и класс, если хотите получить именную грамоту. Это необязательно.</p>
 
             <div class="mode-buttons">
                 <div class="mode-btn solo-btn" onclick="startQuiz('solo')">
                     <div class="icon">🎖️</div>
                     <h3>Один игрок</h3>
-                    <p>Ответы проверяются сразу после каждого вопроса. В конце вы получите грамоту.</p>
+                    <p>Ответы проверяются сразу. В конце вы получите именную грамоту.</p>
                 </div>
                 <div class="mode-btn team-btn" onclick="startQuiz('team')">
                     <div class="icon">👥</div>
                     <h3>Командная игра</h3>
-                    <p>Для игры на проекторе. Ведущий читает, команды пишут на бланках. Ответы в конце.</p>
+                    <p>Для игры на проекторе. Ведущий читает, команды пишут на бланках.</p>
                 </div>
             </div>
         </div>
 
-        <!-- ЭКРАН 2: ВОПРОС -->
         <div id="questionScreen" style="display: none;">
             <div class="quiz-header">
                 <div id="roundBadge" class="round-badge">Раунд 1</div>
@@ -283,70 +299,83 @@
             </div>
         </div>
 
-        <!-- ЭКРАН 3: РЕЗУЛЬТАТЫ -->
+        <!-- ЭКРАН РЕЗУЛЬТАТОВ (ДЛЯ СОЛО) -->
         <div id="resultsScreen" class="final-results">
-            
-            <!-- Блок грамоты -->
             <div id="certificateBlock" class="certificate">
                 <div class="cert-title">Грамота</div>
                 <div class="cert-subtitle">за успешное прохождение исторического квиза</div>
-                <div class="cert-name" id="certName">Имя</div>
-                <div class="cert-class" id="certClass">Класс</div>
+                
+                <div class="cert-user-info">
+                    <div class="cert-name" id="certName">Имя</div><br>
+                    <div class="cert-class" id="certClass">Класс</div>
+                </div>
+
                 <div class="cert-score"><span id="certScore">0</span> <span>из 16</span></div>
                 <div class="cert-text" id="certText">Отличный результат!</div>
-                <div class="cert-quote" id="certQuote">«Пока мы помним — они живы»</div>
-                <div class="cert-date" id="certDate">2026 г.</div>
+                
+                <div class="cert-quote-block">
+                    <div class="cert-quote" id="certQuoteText">«...»</div>
+                    <div class="cert-quote-author" id="certQuoteAuthor">— Автор</div>
+                </div>
+
+                <div class="cert-date" id="certDate">2026 г. · Тула</div>
             </div>
 
             <div class="cert-actions">
                 <button class="btn btn-primary" onclick="saveCertificate()" id="saveBtn">💾 Сохранить грамоту</button>
                 <button class="btn btn-secondary" onclick="location.reload()">Пройти заново</button>
             </div>
+        </div>
 
-            <h2 id="resultsTitle" style="margin-top: 40px; display: none;">Детали ответов</h2>
-            <div class="results-list" id="resultsList" style="display: none;"></div>
+        <!-- ЭКРАН РЕЗУЛЬТАТОВ (ДЛЯ КОМАНД) -->
+        <div id="teamResultsScreen" class="final-results" style="display: none;">
+            <h2 style="font-family: 'Playfair Display', serif; color: var(--accent-gold); font-size: 2rem; margin-bottom: 20px;">Проверка ответов</h2>
+            <div id="teamResultsContent"></div>
+            
+            <div class="quiz-nav" style="justify-content: center; margin-top: 30px;">
+                <button id="teamNextBtn" class="btn btn-primary" onclick="nextTeamResult()">Следующий ответ</button>
+                <button class="btn btn-secondary" onclick="location.reload()">Завершить</button>
+            </div>
         </div>
 
     </div>
 </div>
 
 <script>
-    // Полный список вопросов
     const QUIZ_DATA = [
         { round: "Раунд 1. Общие знания", q: "Когда началась Великая Отечественная война?", image: "img/r1-q1-1941.jpg", caption: "Туляки уезжают на фронт. Тула, 1941 г.", options: ["1941", "1939", "1945"], correct: 0, explain: "Великая Отечественная война началась 22 июня 1941 года." },
         { round: "Раунд 1. Общие знания", q: "Какая армия принимала участие в обороне Тулы?", image: "img/r1-q2-army.jpg", caption: "Схема обороны г. Тулы", options: ["36-я армия", "12-я армия", "50-я армия", "40-я армия"], correct: 2, explain: "50-я армия под командованием генерал-майора А.Н. Ермакова сыграла ключевую роль." },
-        { round: "Раунд 1. Общие знания", q: "Выдающимся советским военачальником в годы ВОВ был:", image: "img/r1-q3-army.jpg", caption: "Портрет маршала Г.К. Жукова", options: ["В.К. Блюхер", "Г.К. Жуков", "К.Е. Ворошилов", "М.Н. Тухачевский"], correct: 1, explain: "Георгий Константинович Жуков — Маршал Советского Союза, четырежды Герой Советского Союза." },
+        { round: "Раунд 1. Общие знания", q: "Выдающимся советским военачальником в годы ВОВ был:", image: "img/r1-q3-army.jpg", caption: "Портрет маршала Г.К. Жукова", options: ["В.К. Блюхер", "Г.К. Жуков", "К.Е. Ворошилов", "М.Н. Тухачевский"], correct: 1, explain: "Георгий Константинович Жуков — Маршал Советского Союза." },
         { round: "Раунд 1. Общие знания", q: "Гитлеровский план наступления на Москву назывался:", image: "img/r1-q4-army.jpg", caption: "План операции «Тайфун»", options: ["«Барбаросса»", "«Ост»", "«Тайфун»", "«Цитадель»"], correct: 2, explain: "План «Тайфун» — кодовое название операции вермахта по захвату Москвы." },
         { round: "Раунд 1. Общие знания", q: "Как назывался план нападения Германии на СССР?", image: "img/r1-q5-army.jpg", caption: "Карта плана «Барбаросса»", options: ["план «Барбороса»", "план «Гром»", "план «Захват»", "план «Атака»"], correct: 0, explain: "План «Барбаросса» — кодовое название плана нападения нацистской Германии на СССР." },
-        { round: "Раунд 1. Общие знания", q: "Как назывался германский стратегический план молниеносной войны?", image: "img/r1-q6-army.jpg", caption: "Марш немецкой танковой дивизии", options: ["блицкриг", "холокост", "«новая» война", "гром"], correct: 0, explain: "Блицкриг (нем. Blitzkrieg — «молниеносная война») — теория ведения скоротечной войны." },
+        { round: "Раунд 1. Общие знания", q: "Как назывался германский стратегический план молниеносной войны?", image: "img/r1-q6-army.jpg", caption: "Марш немецкой танковой дивизии", options: ["блицкриг", "холокост", "«новая» война", "гром"], correct: 0, explain: "Блицкриг (нем. Blitzkrieg — «молниеносная война»)." },
         { round: "Раунд 1. Общие знания", q: "Когда начались первые бои за Тулу?", image: "img/r1-q7-army.jpg", caption: "Героическая оборона Тулы", options: ["сентябрь 1941 года", "август 1941 года", "ноябрь 1941 года", "октябрь 1941 года"], correct: 3, explain: "Первые бои на подступах к Туле начались в конце октября 1941 года." },
         { round: "Раунд 1. Общие знания", q: "Сколько дней длилась оборона Тулы?", image: "img/r1-q8-43-days.jpg", caption: "Карта обороны Тулы", options: ["37", "43", "51", "48"], correct: 1, explain: "Оборона Тулы длилась 43 дня — с 24 октября по 5 декабря 1941 года." },
 
         { round: "Раунд 2. Кадры из фильмов", q: "Кадр из какого фильма изображен на картинке?", image: "img/r2-q1-film.jpg", answerImage: "img/r2-answ1-film.jpg", caption: "Фильм «Т-34»", options: ["«Т-34»", "«28 панфиловцев»", "«Они сражались за Родину»"], correct: 0, explain: "Кадр из фильма «Т-34» (2018)." },
-        { round: "Раунд 2. Кадры из фильмов", q: "Кадр из какого фильма изображен на картинке?", image: "img/r2-q2-film.jpg", answerImage: "img/r2-answ2-film.jpg", caption: "Фильм «Девятаев»", options: ["«В бой идут одни старики»", "«Девятаев»", "«Торпедоносцы»"], correct: 1, explain: "Кадр из фильма «Девятаев» (2021) о побеге из концлагеря." },
-        { round: "Раунд 2. Кадры из фильмов", q: "Кадр из какого фильма изображен на картинке?", image: "img/r2-q3-film.jpg", answerImage: "img/r2-answ3-film.jpg", caption: "Фильм «Битва за Севастополь»", options: ["«Снайпер»", "«Сталинград»", "«Битва за Севастополь»"], correct: 2, explain: "Кадр из фильма «Битва за Севастополь» (2015) о Людмиле Павличенко." },
+        { round: "Раунд 2. Кадры из фильмов", q: "Кадр из какого фильма изображен на картинке?", image: "img/r2-q2-film.jpg", answerImage: "img/r2-answ2-film.jpg", caption: "Фильм «Девятаев»", options: ["«В бой идут одни старики»", "«Девятаев»", "«Торпедоносцы»"], correct: 1, explain: "Кадр из фильма «Девятаев» (2021)." },
+        { round: "Раунд 2. Кадры из фильмов", q: "Кадр из какого фильма изображен на картинке?", image: "img/r2-q3-film.jpg", answerImage: "img/r2-answ3-film.jpg", caption: "Фильм «Битва за Севастополь»", options: ["«Снайпер»", "«Сталинград»", "«Битва за Севастополь»"], correct: 2, explain: "Кадр из фильма «Битва за Севастополь» (2015)." },
         { round: "Раунд 2. Кадры из фильмов", q: "Кадр из какого фильма изображен на картинке?", image: "img/r2-q4-film.jpg", answerImage: "img/r2-answ4-film.jpg", caption: "Фильм «Несокрушимый»", options: ["«Т-34»", "«Несокрушимый»", "«А зори здесь тихие»"], correct: 1, explain: "Кадр из фильма «Несокрушимый» (2018)." },
 
         { round: "Раунд 3. Наши герои", q: "Кого называют тульским Гастелло?", image: "img/r3-q1-chernov.jpg", caption: "Лётчик А.В. Чернов", options: ["Н.К. Аносов", "И.Г. Едунов", "А.В. Чернов"], correct: 2, explain: "Александр Васильевич Чернов — тульский лётчик, повторивший подвиг Гастелло." },
-        { round: "Раунд 3. Наши герои", q: "Какая военная специальность у знаменитого «русского медведя» из Тулы?", image: "img/r3-q2-tokarev.jpg", caption: "Н.А. Токарев", options: ["Н.А. Токарев", "О.П. Матвеев", "А.В. Чернов"], correct: 0, explain: "Николай Александрович Токарев — знаменитый тульский оружейник, создатель пистолета ТТ." },
+        { round: "Раунд 3. Наши герои", q: "Какая военная специальность у знаменитого «русского медведя» из Тулы?", image: "img/r3-q2-tokarev.jpg", caption: "Н.А. Токарев", options: ["Н.А. Токарев", "О.П. Матвеев", "А.В. Чернов"], correct: 0, explain: "Николай Александрович Токарев — тульский оружейник, создатель пистолета ТТ." },
         { round: "Раунд 3. Наши герои", q: "Какая школа воспитала четверых Героев Советского Союза?", image: "img/r3-q3-school.jpg", caption: "Школа №1", options: ["№1", "№2", "№28"], correct: 0, explain: "Школа №1 города Тулы воспитала четверых Героев Советского Союза." },
         { round: "Раунд 3. Наши герои", q: "Сколько лет исполнилось Вале Паршутину в день, когда он относил патроны и погиб?", image: "img/r4-q1-valya.jpg", caption: "Валя Паршутин с семьей", options: ["10 лет", "12 лет", "14 лет"], correct: 1, explain: "Валя погиб 29 октября 1941 года в свой день рождения. Ему исполнилось 12 лет." }
     ];
 
-    // Цитаты для грамоты (в зависимости от результата)
     const QUOTES = {
         high: [
-            "«Героями не рождаются — героями становятся»",
-            "«Пока мы помним — они живы»",
-            "«Служить Родине — высшая честь»"
+            { text: "«Героями не рождаются — героями становятся»", author: "Народная мудрость" },
+            { text: "«Пока мы помним — они живы»", author: "Девиз проекта «Оживший альбом»" },
+            { text: "«Служить Родине — высшая честь»", author: "Девиз защитников Отечества" }
         ],
         mid: [
-            "«Для нашей общей победы важен вклад каждого»",
-            "«История — это не только прошлое, это то, что мы делаем сейчас»"
+            { text: "«Для нашей общей победы важен вклад каждого»", author: "В.В. Путин" },
+            { text: "«Врагу не взять Тулу!»", author: "Девиз защитников города" }
         ],
         low: [
-            "«Не расстраивайся! Главное — ты узнал что-то новое»",
-            "«Каждый шаг к памяти — это уже победа»"
+            { text: "«Каждый шаг к памяти — это уже победа»", author: "Организаторы квиза" },
+            { text: "«История — это не только прошлое, это то, что мы делаем сейчас»", author: "Неизвестный автор" }
         ]
     };
 
@@ -355,13 +384,17 @@
     let soloAnswers = []; 
     let isAnswered = false; 
     let score = 0;
-    let playerName = "";
-    let playerClass = "";
+    let playerName = "Знаток истории";
+    let playerClass = "Тула";
+
+    // Переменные для командного режима
+    let teamAnswersReviewIndex = 0;
 
     const container = document.getElementById('quizContainer');
     const modeScreen = document.getElementById('modeSelection');
     const qScreen = document.getElementById('questionScreen');
     const resScreen = document.getElementById('resultsScreen');
+    const teamResScreen = document.getElementById('teamResultsScreen');
     const qContent = document.getElementById('questionContent');
     const feedback = document.getElementById('soloFeedback');
     const actionBtn = document.getElementById('actionBtn');
@@ -369,24 +402,25 @@
     const scoreCounter = document.getElementById('scoreCounter');
 
     function startQuiz(mode) {
-        // Проверка имени
         const nameInput = document.getElementById('userName').value.trim();
-        if (!nameInput) {
-            alert("Пожалуйста, введите ваше имя перед началом игры.");
-            return;
-        }
-        playerName = nameInput;
-        playerClass = document.getElementById('userClass').value.trim() || "Не указан";
+        const classInput = document.getElementById('userClass').value.trim();
+        
+        if (nameInput) playerName = nameInput;
+        if (classInput) playerClass = classInput;
 
         currentMode = mode;
         currentIndex = 0;
         soloAnswers = [];
         score = 0;
         modeScreen.style.display = 'none';
-        qScreen.style.display = 'block';
         
-        if (mode === 'team') { container.classList.add('team-mode'); } 
-        else { container.classList.remove('team-mode'); }
+        if (mode === 'team') { 
+            container.classList.add('team-mode'); 
+            qScreen.style.display = 'block';
+        } else { 
+            container.classList.remove('team-mode'); 
+            qScreen.style.display = 'block';
+        }
         renderQuestion();
     }
 
@@ -401,7 +435,6 @@
     function renderQuestion() {
         isAnswered = false;
         const q = QUIZ_DATA[currentIndex];
-        
         roundBadge.textContent = q.round;
         updateScoreCounter();
         
@@ -479,27 +512,22 @@
                 document.querySelectorAll(`input[name="q_${currentIndex}"]`).forEach(inp => inp.disabled = true);
             }
         } else {
+            // Командный режим - просто переключаем вопросы
             currentIndex++;
-            if (currentIndex < QUIZ_DATA.length) { renderQuestion(); } else { showTeamResults(); }
+            if (currentIndex < QUIZ_DATA.length) { 
+                renderQuestion(); 
+            } else { 
+                // Вопросы закончились, переходим к режиму проверки ответов
+                showTeamReview(); 
+            }
         }
     }
 
-    function getResultMediaHTML(q) {
-        const imgSrc = q.answerImage ? q.answerImage : q.image;
-        const captionText = q.caption ? q.caption : '';
-        return `
-            <div class="result-media">
-                <img src="${imgSrc}" class="result-img" alt="Фото" onerror="this.style.display='none';">
-                ${captionText ? `<div class="result-caption">${captionText}</div>` : ''}
-            </div>
-        `;
-    }
-
+    // --- ЛОГИКА ДЛЯ СОЛО РЕЖИМА (ГРАМОТА) ---
     function showSoloResults() {
         qScreen.style.display = 'none';
         resScreen.style.display = 'block';
         
-        // Заполняем грамоту
         document.getElementById('certName').textContent = playerName;
         document.getElementById('certClass').textContent = playerClass;
         document.getElementById('certScore').textContent = score;
@@ -518,67 +546,16 @@
             quoteArray = QUOTES.low;
         }
         
+        const randomQuote = quoteArray[Math.floor(Math.random() * quoteArray.length)];
+        
         document.getElementById('certText').textContent = certText;
-        document.getElementById('certQuote').textContent = quoteArray[Math.floor(Math.random() * quoteArray.length)];
+        document.getElementById('certQuoteText').textContent = randomQuote.text;
+        document.getElementById('certQuoteAuthor').textContent = `— ${randomQuote.author}`;
         
         const date = new Date();
         document.getElementById('certDate').textContent = `${date.getFullYear()} г. · Тула`;
-        
-        // Заполняем детали ответов
-        document.getElementById('resultsTitle').style.display = 'block';
-        document.getElementById('resultsList').style.display = 'block';
-        
-        let html = "";
-        QUIZ_DATA.forEach((q, i) => {
-            const isCorrect = soloAnswers[i] === q.correct;
-            html += `
-                <div class="result-item" style="border-left-color: ${isCorrect ? 'var(--accent-green)' : 'var(--accent-red)'};">
-                    ${getResultMediaHTML(q)}
-                    <div class="result-text">
-                        <div class="result-q">${i + 1}. ${q.q}</div>
-                        <div class="result-a" style="color: ${isCorrect ? 'var(--accent-green)' : '#ff6b6b'};">
-                            Ваш ответ: ${q.options[soloAnswers[i]]}
-                        </div>
-                        ${!isCorrect ? `<div style="color:var(--accent-gold); margin-bottom:10px; font-size: 0.9rem;">Правильный ответ: <b>${q.options[q.correct]}</b></div>` : ''}
-                        <div class="result-exp">${q.explain}</div>
-                    </div>
-                </div>
-            `;
-        });
-        document.getElementById('resultsList').innerHTML = html;
     }
 
-    function showTeamResults() {
-        qScreen.style.display = 'none';
-        resScreen.style.display = 'block';
-        container.classList.remove('team-mode');
-        
-        // Скрываем грамоту в командном режиме
-        document.getElementById('certificateBlock').style.display = 'none';
-        document.getElementById('saveBtn').style.display = 'none';
-        
-        document.getElementById('resultsTitle').style.display = 'block';
-        document.getElementById('resultsTitle').textContent = "Правильные ответы";
-        document.getElementById('resultsList').style.display = 'block';
-        
-        let html = "";
-        QUIZ_DATA.forEach((q, i) => {
-            const correctLetter = String.fromCharCode(1040 + q.correct); 
-            html += `
-                <div class="result-item">
-                    ${getResultMediaHTML(q)}
-                    <div class="result-text">
-                        <div class="result-q">${i + 1}. ${q.q}</div>
-                        <div class="result-a">Правильный ответ: ${correctLetter}) ${q.options[q.correct]}</div>
-                        <div class="result-exp">${q.explain}</div>
-                    </div>
-                </div>
-            `;
-        });
-        document.getElementById('resultsList').innerHTML = html;
-    }
-
-    // Функция сохранения грамоты в картинку
     function saveCertificate() {
         const certBlock = document.getElementById('certificateBlock');
         const saveBtn = document.getElementById('saveBtn');
@@ -587,11 +564,10 @@
         saveBtn.innerHTML = "⏳ Сохраняем...";
         saveBtn.disabled = true;
 
-        // Ждем загрузки шрифтов, чтобы текст был красивым на картинке
         document.fonts.ready.then(() => {
             html2canvas(certBlock, {
                 backgroundColor: '#1a1a1a',
-                scale: 2, // Увеличиваем разрешение
+                scale: 2,
                 useCORS: true
             }).then(canvas => {
                 const link = document.createElement('a');
@@ -608,6 +584,61 @@
                 saveBtn.disabled = false;
             });
         });
+    }
+
+    // --- ЛОГИКА ДЛЯ КОМАНДНОГО РЕЖИМА (КАРТОЧКИ ОТВЕТОВ) ---
+    function showTeamReview() {
+        qScreen.style.display = 'none';
+        teamResScreen.style.display = 'block';
+        teamAnswersReviewIndex = 0;
+        renderTeamReviewCard();
+    }
+
+    function renderTeamReviewCard() {
+        const q = QUIZ_DATA[teamAnswersReviewIndex];
+        const correctLetter = String.fromCharCode(1040 + q.correct);
+        const imgSrc = q.answerImage ? q.answerImage : q.image;
+        
+        let html = `
+            <div class="team-result-card">
+                <div class="team-result-header">
+                    <span class="round-badge">${q.round}</span>
+                    <span class="team-result-q-num">Вопрос ${teamAnswersReviewIndex + 1} из ${QUIZ_DATA.length}</span>
+                </div>
+                
+                <div class="team-result-q-text">${q.q}</div>
+                
+                <div class="team-result-image-container">
+                    <img src="${imgSrc}" class="team-result-image" alt="Иллюстрация" onerror="this.style.display='none'; this.parentElement.style.display='none';">
+                </div>
+                
+                <div class="team-result-answer">
+                    Правильный ответ: ${correctLetter}) ${q.options[q.correct]}
+                </div>
+                
+                <div class="team-result-explain">${q.explain}</div>
+                ${q.caption ? `<div class="team-result-caption">${q.caption}</div>` : ''}
+            </div>
+        `;
+        
+        document.getElementById('teamResultsContent').innerHTML = html;
+        
+        const nextBtn = document.getElementById('teamNextBtn');
+        if (teamAnswersReviewIndex === QUIZ_DATA.length - 1) {
+            nextBtn.textContent = 'Конец';
+            nextBtn.onclick = () => { nextBtn.disabled = true; nextBtn.textContent = "Все ответы показаны"; };
+        } else {
+            nextBtn.textContent = 'Следующий ответ';
+            nextBtn.disabled = false;
+            nextBtn.onclick = nextTeamResult;
+        }
+    }
+
+    function nextTeamResult() {
+        if (teamAnswersReviewIndex < QUIZ_DATA.length - 1) {
+            teamAnswersReviewIndex++;
+            renderTeamReviewCard();
+        }
     }
 </script>
 </body>
