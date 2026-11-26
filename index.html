@@ -434,4 +434,58 @@
         document.getElementById('finalScoreText').textContent = `${score} из ${QUIZ_DATA.length}`;
         
         let msg = "";
-        if (score === QUIZ_DATA.length) msg = "Иде
+        if (score === QUIZ_DATA.length) msg = "Идеально! Вы настоящий знаток истории родного края. Так держать!";
+        else if (score >= QUIZ_DATA.length * 0.7) msg = "Отличный результат! Вы хорошо знаете историю. Есть куда расти!";
+        else if (score >= QUIZ_DATA.length * 0.4) msg = "Неплохо! Но история хранит еще много тайн. Стоит перечитать материалы.";
+        else msg = "Не расстраивайтесь! Главное — вы узнали что-то новое. Попробуйте еще раз!";
+        
+        document.getElementById('finalMessage').textContent = msg;
+        
+        let html = "";
+        QUIZ_DATA.forEach((q, i) => {
+            const isCorrect = soloAnswers[i] === q.correct;
+            html += `
+                <div class="result-item" style="border-left-color: ${isCorrect ? 'var(--accent-green)' : 'var(--accent-red)'};">
+                    ${getResultMediaHTML(q)}
+                    <div class="result-text">
+                        <div class="result-q">${i + 1}. ${q.q}</div>
+                        <div class="result-a" style="color: ${isCorrect ? 'var(--accent-green)' : '#ff6b6b'};">
+                            Ваш ответ: ${q.options[soloAnswers[i]]}
+                        </div>
+                        ${!isCorrect ? `<div style="color:var(--accent-gold); margin-bottom:10px; font-size: 0.9rem;">Правильный ответ: <b>${q.options[q.correct]}</b></div>` : ''}
+                        <div class="result-exp">${q.explain}</div>
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('resultsList').innerHTML = html;
+    }
+
+    function showTeamResults() {
+        qScreen.style.display = 'none';
+        resScreen.style.display = 'block';
+        container.classList.remove('team-mode');
+        
+        document.getElementById('resultsTitle').textContent = "Правильные ответы";
+        document.getElementById('finalScoreText').style.display = 'none'; 
+        document.getElementById('finalMessage').textContent = "Используйте этот список для подсчета баллов команд:";
+        
+        let html = "";
+        QUIZ_DATA.forEach((q, i) => {
+            const correctLetter = String.fromCharCode(1040 + q.correct); 
+            html += `
+                <div class="result-item">
+                    ${getResultMediaHTML(q)}
+                    <div class="result-text">
+                        <div class="result-q">${i + 1}. ${q.q}</div>
+                        <div class="result-a">Правильный ответ: ${correctLetter}) ${q.options[q.correct]}</div>
+                        <div class="result-exp">${q.explain}</div>
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById('resultsList').innerHTML = html;
+    }
+</script>
+</body>
+</html>
