@@ -35,7 +35,8 @@
             color: var(--text-main);
             font-family: 'Montserrat', sans-serif;
             margin: 0;
-            min-height: 100vh;
+            height: 100vh; height: 100dvh;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -49,32 +50,39 @@
             pointer-events: none; z-index: 0; overflow: hidden;
         }
         .floating-quote {
-            position: absolute; bottom: -100px;
-            font-family: 'Playfair Display', serif; font-size: 1.6rem;
-            color: rgba(212, 175, 55, 0.4);
-            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            position: absolute; left: 0;
+            font-family: 'Playfair Display', serif; font-size: 1.5rem;
+            color: rgba(212, 175, 55, 0.38);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.38);
             white-space: nowrap;
-            animation: floatUpQuote linear infinite;
+            animation: slideAcross linear infinite;
+            will-change: transform;
         }
-        @keyframes floatUpQuote {
-            0% { transform: translateY(0) rotate(-5deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-120vh) rotate(5deg); opacity: 0; }
+        @keyframes slideAcross {
+            0% { transform: translateX(105vw); opacity: 0; }
+            4% { opacity: 1; }
+            96% { opacity: 1; }
+            100% { transform: translateX(-110%); opacity: 0; }
         }
 
-        .quiz-wrapper { width: 100%; max-width: 900px; position: relative; z-index: 1; margin: auto; }
+        .quiz-wrapper { width: 100%; max-width: 900px; position: relative; z-index: 1; margin: auto; transform-origin: 50% 50%; transition: transform 0.3s ease; }
 
         .quiz-card {
             background-color: var(--bg-panel);
-            background-image: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+            background-image:
+                linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 3 L61 38 L98 38 L68 60 L79 95 L50 73 L21 95 L32 60 L2 38 L39 38 Z" fill="%23d4af37" fill-opacity="0.04"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: auto, 420px;
             border-radius: 12px; 
             border: 2px solid var(--border-color); 
             border-top: 4px solid var(--accent-orange);
             /* Свечение вокруг карточки */
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8), inset 0 0 50px rgba(0,0,0,0.5), 0 0 30px rgba(201, 107, 44, 0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8), inset 0 0 50px rgba(0,0,0,0.5), 0 0 30px rgba(201, 107, 44, 0.1), inset 0 0 0 1px rgba(212, 175, 55, 0.08);
             position: relative; 
             padding: 40px;
+            display: flex; flex-direction: column;
             animation: cardAppear 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .quiz-card::before, .quiz-card::after {
@@ -85,6 +93,8 @@
         .quiz-card::before { left: 18px; }
         .quiz-card::after { right: 18px; }
 
+        #questionScreen { flex-direction: column; }
+
         @keyframes cardAppear {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -92,8 +102,9 @@
 
         /* === ЭКРАН СТАРТА === */
         .mode-selection { text-align: center; }
-        .mode-selection h2 { font-family: 'Playfair Display', serif; color: var(--accent-gold); font-size: 2.5rem; margin-bottom: 10px; text-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+        .mode-selection h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(90deg, #b8860b, #ffd700, #fff5cc, #ffd700, #b8860b); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.35)); animation: goldShimmer 4s linear infinite; }
         .mode-selection .subtitle { color: var(--text-muted); margin-bottom: 20px; font-size: 1.1rem; }
+        .mode-selection .subtitle::after { content: '★ ★ ★'; display: block; margin-top: 15px; color: rgba(212, 175, 55, 0.5); font-size: 0.8rem; letter-spacing: 12px; }
         
         .user-form { margin-bottom: 20px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
         .user-input { 
@@ -119,7 +130,7 @@
         .mode-btn.team-btn { border-bottom: 4px solid var(--accent-red); }
 
         /* === ВОПРОСЫ === */
-        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 1px dashed var(--border-color); }
         .round-badge { background: var(--accent-red); color: white; padding: 6px 14px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
         .score-counter { font-weight: 700; color: var(--accent-gold); font-size: 1rem; background: rgba(201, 107, 44, 0.15); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--accent-orange); }
 
@@ -175,11 +186,123 @@
         .ornament::before, .ornament::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.45), transparent); }
         .ornament span { color: rgba(212, 175, 55, 0.6); font-size: 0.8rem; letter-spacing: 10px; padding-left: 10px; }
 
+        /* === ВЕЧНЫЙ ОГОНЬ (звезда-мемориал с пламенем) === */
+        .eternal-flame { position: relative; width: 76px; height: 96px; margin: 0 auto 8px; }
+        .eternal-flame svg { position: absolute; inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6)) drop-shadow(0 0 14px rgba(212, 175, 55, 0.25)); }
+        .eternal-flame .flame-outer, .eternal-flame .flame-inner { transform-box: fill-box; transform-origin: 50% 100%; }
+        .eternal-flame .flame-outer { animation: flameSway 0.45s ease-in-out infinite alternate; filter: drop-shadow(0 0 10px rgba(255, 140, 26, 0.7)); }
+        .eternal-flame .flame-inner { animation: flameSway 0.3s ease-in-out infinite alternate-reverse; }
+        @keyframes flameSway {
+            from { transform: scale(1, 1) skewX(0deg); }
+            to { transform: scale(1.04, 1.12) skewX(2.5deg); }
+        }
+
+        /* === ЛЕТЯЩИЕ УГОЛЬКИ === */
+        .ember {
+            position: fixed; bottom: -10px; border-radius: 50%;
+            background: radial-gradient(circle, #ffc542, #c96b2c 60%, transparent 75%);
+            pointer-events: none; z-index: 0;
+            animation: emberRise linear infinite;
+        }
+        @keyframes emberRise {
+            0% { transform: translate(0, 0); opacity: 0; }
+            8% { opacity: 0.85; }
+            100% { transform: translate(var(--sway, 3vw), -105vh); opacity: 0; }
+        }
+
+        /* === САЛЮТ (частицы) === */
+        .fw-particle {
+            position: fixed; width: 6px; height: 6px; border-radius: 50%;
+            background: var(--accent-gold); box-shadow: 0 0 10px var(--accent-gold);
+            z-index: 600; pointer-events: none;
+            animation: fwFly 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+        @keyframes fwFly {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+        }
+
+        @keyframes goldShimmer { to { background-position: 200% center; } }
+
+        /* При сохранении грамоты — сплошной цвет вместо градиента (для html2canvas) */
+        .cert-capture .cert-title { background: none; -webkit-text-fill-color: var(--accent-gold); color: var(--accent-gold); filter: none; animation: none; }
+
        .question-image-container { width: 100%; margin-bottom: 25px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border-color); background: #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .question-image { display: block; max-width: 100%; max-height: 350px; width: auto; height: auto; object-fit: contain; filter: sepia(0.4) contrast(1.1); transition: filter 0.5s ease, transform 0.5s ease; }
         .question-image-container:hover .question-image { filter: sepia(0.1) contrast(1.15); transform: scale(1.02); }
+        .question-image, .team-result-image { cursor: zoom-in; }
+        .question-image-container, .team-result-image-container { position: relative; }
+        .question-image-container::after, .team-result-image-container::after {
+            content: '🔍'; position: absolute; bottom: 8px; right: 8px;
+            font-size: 0.9rem; background: rgba(0,0,0,0.55); color: #fff;
+            padding: 4px 9px; border-radius: 6px; opacity: 0; transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .question-image-container:hover::after, .team-result-image-container:hover::after { opacity: 0.85; }
+
+        /* === ЛАЙТБОКС — увеличение фото === */
+        .image-lightbox {
+            position: fixed; inset: 0; z-index: 800;
+            background: rgba(10, 8, 6, 0.93); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center;
+            cursor: zoom-out; animation: lbFade 0.25s ease;
+        }
+        .image-lightbox img {
+            max-width: 92vw; max-height: 88vh; border-radius: 8px;
+            border: 2px solid var(--accent-gold);
+            box-shadow: 0 0 60px rgba(212, 175, 55, 0.25), 0 30px 80px rgba(0,0,0,0.8);
+            animation: lbZoom 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: sepia(0.25) contrast(1.1); cursor: zoom-out;
+        }
+        .lb-caption {
+            position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
+            font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.05rem;
+            color: var(--accent-gold); text-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
+            background: rgba(26, 21, 18, 0.7); padding: 8px 20px; border-radius: 20px;
+            max-width: 85vw; text-align: center;
+        }
+        @keyframes lbFade { from { opacity: 0; } }
+        @keyframes lbZoom { from { transform: scale(0.75); opacity: 0; } }
+
+        /* Счётчик вопроса в шапке */
+        .q-counter { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+
+        /* Печать «Город-герой» на грамоте */
+        .cert-stamp {
+            position: absolute; right: 28px; bottom: 28px; width: 105px; height: 105px;
+            border: 3px double rgba(197, 60, 60, 0.8); border-radius: 50%;
+            color: rgba(215, 80, 80, 0.85); font-size: 0.6rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 2px; text-align: center; line-height: 1.5;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+            transform: rotate(-12deg); pointer-events: none;
+        }
+        .cert-stamp span { font-size: 1.5rem; line-height: 1; margin-bottom: 2px; }
+
+        /* === ТАЙМЕР (командный режим) === */
+        .timer-widget {
+            position: fixed; right: 20px; bottom: 20px; z-index: 400;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            background: rgba(26, 21, 18, 0.88); border: 1px solid var(--border-color);
+            border-radius: 14px; padding: 12px 14px; backdrop-filter: blur(4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .timer-face { position: relative; width: 86px; height: 86px; }
+        .timer-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .ring-bg { fill: none; stroke: #3a2d22; stroke-width: 6; }
+        .ring-fg { fill: none; stroke: var(--accent-gold); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 213.6; stroke-dashoffset: 0; transition: stroke-dashoffset 0.95s linear, stroke 0.3s; }
+        .timer-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--accent-gold); }
+        .timer-widget.time-up .timer-text { font-size: 0.85rem; color: #e57373; }
+        .timer-widget.time-up { border-color: var(--accent-red); box-shadow: 0 0 25px rgba(197, 60, 60, 0.45); animation: timeUpPulse 0.8s ease 3; }
+        @keyframes timeUpPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+        .timer-controls { display: flex; gap: 5px; }
+        .timer-controls button {
+            padding: 4px 9px; font-size: 0.75rem; font-weight: 700; font-family: 'Montserrat', sans-serif;
+            background: #1f1813; color: var(--accent-gold); border: 1px solid var(--border-color);
+            border-radius: 6px; cursor: pointer; transition: 0.2s;
+        }
+        .timer-controls button:hover { border-color: var(--accent-gold); background: #2b221b; }
         
-        .question-title { font-weight: 700; font-size: 1.25rem; margin-bottom: 20px; color: var(--accent-gold); line-height: 1.4; }
+        .question-title { font-weight: 700; font-size: 1.25rem; margin-bottom: 20px; color: var(--accent-gold); line-height: 1.4; background: rgba(201, 107, 44, 0.08); padding: 14px 18px; border-radius: 8px; border-left: 3px solid var(--accent-orange); }
         .options-grid { display: grid; gap: 12px; margin-bottom: 20px; }
         .option-label { display: flex; align-items: center; background: #1f1813; padding: 16px 18px; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; font-weight: 600; color: #d1c7bb; font-size: 0.95rem; }
         .option-label:hover { background: #2b221b; border-color: var(--border-color); transform: translateX(5px); }
@@ -191,7 +314,9 @@
         /* === КНОПКИ === */
         .quiz-nav { display: flex; justify-content: flex-end; margin-top: 25px; }
         .btn { padding: 15px 30px; border: none; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-primary { background-color: var(--accent-orange); color: white; box-shadow: 0 4px 15px rgba(201, 107, 44, 0.4); }
+        .btn-primary { background-color: var(--accent-orange); color: white; box-shadow: 0 4px 15px rgba(201, 107, 44, 0.4); position: relative; overflow: hidden; }
+        .btn-primary::after { content: ''; position: absolute; top: 0; left: -80%; width: 45%; height: 100%; background: linear-gradient(105deg, transparent, rgba(255,255,255,0.35), transparent); transform: skewX(-20deg); animation: btnShine 3.5s ease-in-out infinite; pointer-events: none; }
+        @keyframes btnShine { 0%, 55% { left: -80%; } 100% { left: 140%; } }
         .btn-primary:hover { background-color: #e07b39; transform: translateY(-2px); }
         .btn-primary:disabled { background-color: #3a2d22; color: #6b5a4a; cursor: not-allowed; box-shadow: none; transform: none; }
         
@@ -243,7 +368,7 @@
         .certificate::before, .certificate::after { content: '★'; position: absolute; color: var(--accent-gold); font-size: 2rem; opacity: 0.5; }
         .certificate::before { top: 15px; left: 20px; }
         .certificate::after { bottom: 15px; right: 20px; }
-        .cert-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 5px; }
+        .cert-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; text-transform: uppercase; letter-spacing: 5px; margin-bottom: 5px; background: linear-gradient(90deg, #b8860b, #ffd700, #fff5cc, #ffd700, #b8860b); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4)); animation: goldShimmer 4s linear infinite; }
         .cert-subtitle { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text-muted); font-style: italic; margin-bottom: 30px; }
         .cert-user-info { margin-bottom: 25px; }
         .cert-name { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #fff; border-bottom: 2px solid var(--accent-gold); display: inline-block; padding: 0 20px 5px; margin-bottom: 5px; }
@@ -280,7 +405,7 @@
             margin-top: 20px;
         }
 
-        .team-mode .question-title { font-size: 1.4rem; text-align: center; }
+        .team-mode .question-title { font-size: 1.4rem; text-align: center; border-left: none; border-bottom: 2px solid rgba(212, 175, 55, 0.35); }
         .team-mode .option-label { font-size: 1.1rem; justify-content: center; padding: 20px; cursor: default; }
         .team-mode .option-label:hover { background: #1f1813; transform: none; }
         .team-mode .custom-radio { display: none; }
@@ -291,6 +416,7 @@
 
         @media (max-width: 768px) {
             .quiz-card { padding: 20px; }
+            .eternal-flame { transform: scale(0.8); margin-bottom: 0; }
             .mode-buttons { flex-direction: column; align-items: center; }
             .team-mode .question-title { font-size: 1.1rem; }
             .team-mode .option-label { font-size: 0.95rem; padding: 12px; }
@@ -301,15 +427,33 @@
             .cert-title { font-size: 2rem; }
             .team-result-image-container { height: 200px; }
         }
+
+        /* Компактный режим для низких окон — всё влезает без прокрутки */
+        @media (max-height: 840px) {
+            .quiz-card { padding: 24px 30px; }
+            .question-image { max-height: 26vh; }
+            .question-title { margin-bottom: 12px; padding: 10px 14px; font-size: 1.15rem; }
+            .options-grid { gap: 8px; margin-bottom: 10px; }
+            .option-label { padding: 11px 14px; font-size: 0.9rem; }
+            .stars-progress { margin-bottom: 14px; }
+            .ornament { margin-top: 12px; }
+            .btn { padding: 12px 24px; }
+            .quiz-header { margin-bottom: 10px; padding-bottom: 8px; }
+            .question-image-container { margin-bottom: 15px; }
+        }
+        @media (max-height: 620px) {
+            .question-image { max-height: 18vh; }
+            .quiz-card { padding: 16px 22px; }
+        }
     </style>
 </head>
 <body>
 
 <div class="floating-quotes-container">
-    <div class="floating-quote" style="left: 5%; animation-duration: 25s; animation-delay: 0s;">«Я маленький, меня не заметят!» — Валя Паршутин</div>
-    <div class="floating-quote" style="left: 35%; animation-duration: 30s; animation-delay: 5s;">«Раненых не бросаем! За мной!» — Комиссар Агеев</div>
-    <div class="floating-quote" style="left: 65%; animation-duration: 28s; animation-delay: 10s;">«Врагу не взять Тулу!»</div>
-    <div class="floating-quote" style="left: 85%; animation-duration: 35s; animation-delay: 2s;">«Пока мы помним — они живы»</div>
+    <div class="floating-quote" style="top: 2%; animation-duration: 50s; animation-delay: -8s;">«Я маленький, меня не заметят!» — Валя Паршутин</div>
+    <div class="floating-quote" style="top: 6.5%; animation-duration: 65s; animation-delay: -30s;">«Раненых не бросаем! За мной!» — Комиссар Агеев</div>
+    <div class="floating-quote" style="top: 11%; animation-duration: 55s; animation-delay: -45s;">«Врагу не взять Тулу!»</div>
+    <div class="floating-quote" style="top: 15.5%; animation-duration: 75s; animation-delay: -18s;">«Пока мы помним — они живы»</div>
 </div>
 
 <div class="quiz-wrapper">
@@ -317,6 +461,34 @@
         
         <!-- ЭКРАН ВЫБОРА -->
         <div id="modeSelection" class="mode-selection">
+            <div class="eternal-flame">
+                <svg viewBox="0 0 120 120">
+                    <defs>
+                        <linearGradient id="starGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0" stop-color="#a83232"/>
+                            <stop offset="1" stop-color="#5e0f0f"/>
+                        </linearGradient>
+                        <radialGradient id="flameOuter" cx="0.5" cy="0.75" r="0.7">
+                            <stop offset="0" stop-color="#fff3c4"/>
+                            <stop offset="0.4" stop-color="#ffc542"/>
+                            <stop offset="0.75" stop-color="#ff8c1a"/>
+                            <stop offset="1" stop-color="#c93a12"/>
+                        </radialGradient>
+                        <radialGradient id="flameInner" cx="0.5" cy="0.7" r="0.7">
+                            <stop offset="0" stop-color="#ffffff"/>
+                            <stop offset="0.6" stop-color="#ffe89a"/>
+                            <stop offset="1" stop-color="#ffc542"/>
+                        </radialGradient>
+                    </defs>
+                    <polygon points="60,33 70.6,63.4 102.8,64.1 77.1,83.6 86.5,114.4 60,96 33.5,114.4 42.9,83.6 17.2,64.1 49.4,63.4" fill="url(#starGrad)" stroke="#d4af37" stroke-width="1.5"/>
+                    <g class="flame-outer">
+                        <path d="M60 14 C 68 32, 76 42, 76 56 C 76 68, 69 76, 60 76 C 51 76, 44 68, 44 56 C 44 42, 52 32, 60 14 Z" fill="url(#flameOuter)"/>
+                    </g>
+                    <g class="flame-inner">
+                        <path d="M60 44 C 64 51, 68 55, 68 62 C 68 68, 64.5 72, 60 72 C 55.5 72, 52 68, 52 62 C 52 55, 56 50, 60 44 Z" fill="url(#flameInner)"/>
+                    </g>
+                </svg>
+            </div>
             <h2>Испытание для знатоков</h2>
             <p class="subtitle">Выберите формат прохождения</p>
             
@@ -344,6 +516,7 @@
         <div id="questionScreen" style="display: none;">
             <div class="quiz-header">
                 <div id="roundBadge" class="round-badge">Раунд 1</div>
+                <div id="qCounter" class="q-counter">Вопрос 1 из 16</div>
                 <div id="scoreCounter" class="score-counter">Правильно: 0 / 16</div>
             </div>
             <div id="starsProgress" class="stars-progress"></div>
@@ -375,6 +548,7 @@
                 </div>
 
                 <div class="cert-date" id="certDate">2026 г. · Тула</div>
+                <div class="cert-stamp"><span>★</span>Тула<br>город-герой</div>
             </div>
 
             <div class="cert-actions">
@@ -391,6 +565,23 @@
             </div>
         </div>
 
+    </div>
+</div>
+
+<!-- ТАЙМЕР ДЛЯ ВЕДУЩЕГО (командный режим) -->
+<div id="timerWidget" class="timer-widget" style="display: none;">
+    <div class="timer-face">
+        <svg class="timer-ring" viewBox="0 0 80 80">
+            <circle class="ring-bg" cx="40" cy="40" r="34"/>
+            <circle class="ring-fg" id="timerArc" cx="40" cy="40" r="34"/>
+        </svg>
+        <div class="timer-text" id="timerText">⏱</div>
+    </div>
+    <div class="timer-controls">
+        <button onclick="startTimer(30)">30 с</button>
+        <button onclick="startTimer(60)">60 с</button>
+        <button onclick="startTimer(90)">90 с</button>
+        <button onclick="stopTimer()" title="Остановить">✕</button>
     </div>
 </div>
 
@@ -453,6 +644,116 @@
     const actionBtn = document.getElementById('actionBtn');
     const roundBadge = document.getElementById('roundBadge');
     const scoreCounter = document.getElementById('scoreCounter');
+    const qCounter = document.getElementById('qCounter');
+    const wrapper = document.querySelector('.quiz-wrapper');
+
+    // Масштабирование карточки под размер окна — прокрутка не нужна
+    function fitToWindow() {
+        wrapper.style.transform = 'none';
+        // offsetTop/offsetLeft — layout-координаты, не зависят от transform и его анимации
+        const h = container.offsetHeight;
+        const w = container.offsetWidth;
+        const scale = Math.min(1,
+            (window.innerHeight - 30) / h,
+            (window.innerWidth - 30) / w
+        );
+        // После scale вокруг центра бокса считаем, где окажется контент, и центрируем его в окне
+        const curTop = wrapper.offsetTop + h * (1 - scale) / 2;
+        const curLeft = wrapper.offsetLeft + w * (1 - scale) / 2;
+        const wantTop = Math.max(15, (window.innerHeight - scale * h) / 2);
+        const wantLeft = Math.max(15, (window.innerWidth - scale * w) / 2);
+        wrapper.style.transform = `translate(${wantLeft - curLeft}px, ${wantTop - curTop}px) scale(${scale})`;
+    }
+    window.addEventListener('resize', fitToWindow);
+    window.addEventListener('load', fitToWindow);
+    document.fonts.ready.then(fitToWindow);
+    fitToWindow();
+
+    // Летящие угольки на фоне — «обожжённая бумага»
+    const quotesContainer = document.querySelector('.floating-quotes-container');
+    for (let i = 0; i < 14; i++) {
+        const e = document.createElement('div');
+        e.className = 'ember';
+        const size = 2 + Math.random() * 4;
+        e.style.cssText = `left:${Math.random() * 100}%; width:${size}px; height:${size}px; animation-duration:${9 + Math.random() * 12}s; animation-delay:-${Math.random() * 15}s; --sway:${(Math.random() * 10 - 5).toFixed(1)}vw;`;
+        quotesContainer.appendChild(e);
+    }
+
+    // Салют при отличном результате
+    function launchFireworks() {
+        const bursts = [[22, 25], [50, 16], [78, 26], [35, 34], [65, 20]];
+        bursts.forEach((b, i) => setTimeout(() => spawnBurst(b[0], b[1]), i * 650));
+    }
+    // Лайтбокс — клик по фото открывает на весь экран
+    function openLightbox(src, caption) {
+        const lb = document.createElement('div');
+        lb.className = 'image-lightbox';
+        lb.innerHTML = `<img src="${src}" alt="Увеличенное фото">${caption ? `<div class="lb-caption">${caption}</div>` : ''}`;
+        lb.onclick = () => lb.remove();
+        document.body.appendChild(lb);
+    }
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { const lb = document.querySelector('.image-lightbox'); if (lb) lb.remove(); }
+    });
+
+    // === ТАЙМЕР ДЛЯ ВЕДУЩЕГО ===
+    const timerWidget = document.getElementById('timerWidget');
+    const timerArc = document.getElementById('timerArc');
+    const timerText = document.getElementById('timerText');
+    const RING_LEN = 213.6;
+    let timerInterval = null, timerTotal = 60, timerLeft = 0;
+
+    function startTimer(sec) {
+        clearInterval(timerInterval);
+        timerTotal = timerLeft = sec;
+        timerWidget.classList.remove('time-up');
+        updateTimerFace();
+        timerInterval = setInterval(() => {
+            timerLeft--;
+            updateTimerFace();
+            if (timerLeft <= 0) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                timerText.textContent = 'Время!';
+                timerWidget.classList.add('time-up');
+            }
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        timerArc.style.strokeDashoffset = 0;
+        timerArc.style.stroke = 'var(--accent-gold)';
+        timerText.textContent = '⏱';
+        timerWidget.classList.remove('time-up');
+    }
+
+    function updateTimerFace() {
+        timerArc.style.strokeDashoffset = RING_LEN * (1 - timerLeft / timerTotal);
+        timerArc.style.stroke = timerLeft <= 10 ? '#e05050' : 'var(--accent-gold)';
+        timerText.textContent = timerLeft;
+    }
+
+    function spawnBurst(xPercent, yPercent) {
+        const x = window.innerWidth * xPercent / 100;
+        const y = window.innerHeight * yPercent / 100;
+        const colors = ['#ffd700', '#ff8c1a', '#e8dfd3', '#d4af37'];
+        for (let i = 0; i < 22; i++) {
+            const p = document.createElement('div');
+            p.className = 'fw-particle';
+            const angle = (Math.PI * 2 * i) / 22 + Math.random() * 0.3;
+            const dist = 60 + Math.random() * 110;
+            p.style.left = x + 'px';
+            p.style.top = y + 'px';
+            p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+            p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+            p.style.background = colors[i % colors.length];
+            p.style.boxShadow = `0 0 10px ${colors[i % colors.length]}`;
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 1300);
+        }
+    }
 
     function startQuiz(mode) {
         const nameInput = document.getElementById('userName').value.trim();
@@ -473,8 +774,9 @@
         } else { 
             container.classList.remove('team-mode'); 
         }
-        qScreen.style.display = 'block';
-        window.scrollTo(0, 0); // Скролл вверх при старте
+        qScreen.style.display = 'flex';
+        timerWidget.style.display = (mode === 'team') ? 'flex' : 'none';
+        if (mode === 'team') stopTimer();
         renderQuestion();
     }
 
@@ -490,6 +792,7 @@
         isAnswered = false;
         const q = QUIZ_DATA[currentIndex];
         roundBadge.textContent = q.round;
+        qCounter.textContent = `Вопрос ${currentIndex + 1} из ${QUIZ_DATA.length}`;
         updateScoreCounter();
         renderStars();
 
@@ -497,7 +800,7 @@
         
         let html = `
             <div class="question-image-container">
-                <img src="${q.image}" class="question-image" alt="Иллюстрация" onerror="this.style.display='none'; this.parentElement.style.display='none';">
+                <img src="${q.image}" class="question-image" alt="Иллюстрация" onclick="openLightbox(this.src, '')" onload="fitToWindow()" onerror="this.style.display='none'; this.parentElement.style.display='none';">
             </div>
             <div class="question-title">${q.q}</div>
             <div class="options-grid">
@@ -531,10 +834,7 @@
             actionBtn.disabled = false;
         }
         
-        // Плавный скролл вверх при появлении нового вопроса
-        setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 50);
+        fitToWindow();
     }
 
     function enableSoloBtn() { if (!isAnswered) actionBtn.disabled = false; }
@@ -577,6 +877,7 @@
                 renderStars(currentIndex);
                 actionBtn.textContent = (currentIndex === QUIZ_DATA.length - 1) ? 'Узнать результат' : 'Следующий вопрос';
                 document.querySelectorAll(`input[name="q_${currentIndex}"]`).forEach(inp => inp.disabled = true);
+                fitToWindow();
             }
         } else {
             currentIndex++;
@@ -634,6 +935,8 @@
         
         const date = new Date();
         document.getElementById('certDate').textContent = `${date.getFullYear()} г. · Тула`;
+        fitToWindow();
+        if (score >= 14) launchFireworks();
     }
 
     function saveCertificate() {
@@ -645,11 +948,13 @@
         saveBtn.disabled = true;
 
         document.fonts.ready.then(() => {
+            certBlock.classList.add('cert-capture');
             html2canvas(certBlock, {
                 backgroundColor: '#1a1512',
                 scale: 2,
                 useCORS: true
             }).then(canvas => {
+                certBlock.classList.remove('cert-capture');
                 const link = document.createElement('a');
                 link.download = `Грамота_${playerName}.png`;
                 link.href = canvas.toDataURL('image/png');
@@ -658,6 +963,7 @@
                 saveBtn.innerHTML = originalText;
                 saveBtn.disabled = false;
             }).catch(err => {
+                certBlock.classList.remove('cert-capture');
                 console.error("Ошибка сохранения:", err);
                 alert("Не удалось сохранить грамоту. Попробуйте сделать скриншот.");
                 saveBtn.innerHTML = originalText;
@@ -668,6 +974,8 @@
 
     function showTeamReview() {
         qScreen.style.display = 'none';
+        stopTimer();
+        timerWidget.style.display = 'none';
         teamResScreen.style.display = 'block';
         teamAnswersReviewIndex = 0;
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -689,7 +997,7 @@
                 <div class="team-result-q-text">${q.q}</div>
                 
                 <div class="team-result-image-container">
-                    <img src="${imgSrc}" class="team-result-image" alt="Иллюстрация" onerror="this.style.display='none'; this.parentElement.style.display='none';">
+                    <img src="${imgSrc}" class="team-result-image" alt="Иллюстрация" data-caption="${q.caption || ''}" onclick="openLightbox(this.src, this.dataset.caption)" onload="fitToWindow()" onerror="this.style.display='none'; this.parentElement.style.display='none';">
                 </div>
                 
                 <div class="team-result-answer">
@@ -702,6 +1010,7 @@
         `;
         
         document.getElementById('teamResultsContent').innerHTML = html;
+        fitToWindow();
         
         const nextBtn = document.getElementById('teamNextBtn');
         if (teamAnswersReviewIndex === QUIZ_DATA.length - 1) {
