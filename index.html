@@ -116,8 +116,8 @@
         .round-badge { background: var(--accent-red); color: white; padding: 6px 14px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
         .score-counter { font-weight: 700; color: var(--accent-gold); font-size: 1rem; background: rgba(201, 107, 44, 0.15); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--accent-orange); }
 
-       .question-image-container { width: 100%; max-height: 350px; margin-bottom: 25px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border-color); background: #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .question-image { max-width: 100%; max-height: 100%; object-fit: contain; filter: sepia(0.4) contrast(1.1); }
+       .question-image-container { width: 100%; margin-bottom: 25px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border-color); background: #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .question-image { display: block; max-width: 100%; max-height: 350px; width: auto; height: auto; object-fit: contain; filter: sepia(0.4) contrast(1.1); }
         
         .question-title { font-weight: 700; font-size: 1.25rem; margin-bottom: 20px; color: var(--accent-gold); line-height: 1.4; }
         .options-grid { display: grid; gap: 12px; margin-bottom: 20px; }
@@ -231,7 +231,7 @@
             .mode-buttons { flex-direction: column; align-items: center; }
             .team-mode .question-title { font-size: 1.1rem; }
             .team-mode .option-label { font-size: 0.95rem; padding: 12px; }
-            .question-image-container { max-height: 250px; }
+            .question-image { max-height: 250px; }
             .cert-title { font-size: 2rem; }
             .team-result-image-container { height: 200px; }
         }
