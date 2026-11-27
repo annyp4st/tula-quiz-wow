@@ -1025,13 +1025,17 @@
         saveBtn.disabled = true;
 
         document.fonts.ready.then(() => {
-            certBlock.classList.add('cert-capture');
-            html2canvas(certBlock, {
+            // Клонируем грамоту с фиксированной шириной — на телефоне PNG не будет узким
+            const clone = certBlock.cloneNode(true);
+            clone.style.cssText = 'position:fixed; left:-9999px; top:0; width:640px; margin:0; transform:none;';
+            clone.classList.add('cert-capture');
+            document.body.appendChild(clone);
+            html2canvas(clone, {
                 backgroundColor: '#1a1512',
                 scale: 2,
                 useCORS: true
             }).then(canvas => {
-                certBlock.classList.remove('cert-capture');
+                clone.remove();
                 const link = document.createElement('a');
                 link.download = `Грамота_${playerName}.png`;
                 link.href = canvas.toDataURL('image/png');
@@ -1040,7 +1044,7 @@
                 saveBtn.innerHTML = originalText;
                 saveBtn.disabled = false;
             }).catch(err => {
-                certBlock.classList.remove('cert-capture');
+                clone.remove();
                 console.error("Ошибка сохранения:", err);
                 alert("Не удалось сохранить грамоту. Попробуйте сделать скриншот.");
                 saveBtn.innerHTML = originalText;
